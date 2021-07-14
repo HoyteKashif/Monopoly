@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2021-07-14T14:00:46</date>
+  <millis>1626285646786</millis>
+  <sequence>0</sequence>
+  <logger>monopoly.Player</logger>
+  <level>INFO</level>
+  <class>monopoly.Player</class>
+  <method>setPosition</method>
+  <thread>1</thread>
+  <message>2021-07-14T14:00:46.440 position changed to [request=9; actual=9]</message>
+</record>
+</log>
