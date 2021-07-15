@@ -172,6 +172,7 @@ public class Board {
 	}
 
 	public static <T> T get(int i, Class<T> clas) {
+
 		Object o = board[i];
 		if (clas.isInstance(o)) {
 			return clas.cast(o);
@@ -180,6 +181,7 @@ public class Board {
 	}
 
 	public static void requireValidLocation(int i) {
+
 		if (!isValidLocation(i))
 			throw new IllegalArgumentException("Invalid location " + i);
 	}
@@ -195,11 +197,53 @@ public class Board {
 	 * @return
 	 */
 	public static boolean isChance(int iSpace) {
+
 		for (int i : CHANCE) {
 			if (iSpace == i) {
 				return true;
 			}
 		}
+		return false;
+	}
+
+	/**
+	 * Find the location of a Street by the Street's name
+	 * 
+	 * @param name
+	 * @return location of the Street, if value is -1 then the street could not be
+	 *         found
+	 */
+	public static int findStreetByName(String name) {
+
+		for (int i = 0; i < board.length; i++) {
+			if (isStreet(i) && ((Street) board[i]).name().equalsIgnoreCase(name)) {
+				return i;
+			}
+		}
+
+		// could not find the street by name
+		return -1;
+	}
+
+	/**
+	 * Move the player to a new space on the board
+	 * 
+	 * @param player
+	 * @param newPosition
+	 * @return true if the player lands on or crosses go in the processes, otherwise
+	 *         false
+	 */
+	public static boolean advancePlayer(Player player, int newPosition) {
+
+		int curPosition = player.getPosition();
+
+		player.setPosition(newPosition);
+
+		// did they pass Go?
+		if (curPosition > newPosition) {
+			return true;
+		}
+
 		return false;
 	}
 }

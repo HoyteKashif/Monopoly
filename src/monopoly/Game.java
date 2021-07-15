@@ -187,4 +187,16 @@ class Game {
 		return ret;
 	}
 
+	public void advancePlayer(Player player, int newPosition) {
+		int curPosition = player.getPosition();
+
+		player.setPosition(newPosition);
+
+		// If you pass Go
+		if (curPosition > newPosition) {
+			// collect $200
+			player.bank_balance += 200;
+		}
+	}
+
 }

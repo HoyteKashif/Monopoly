@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.Stack;
 
+import monopoly.Board;
 import monopoly.Player;
 
 public class Deck {
@@ -24,10 +25,15 @@ public class Deck {
 		deck[1] = new ChanceCard("Advance to Illinois Ave.") {
 			@Override
 			public void action(Player player) {
-				// Advance to Illinois Ave. {Avenue}. [Advance to Trafalgar Square] If you pass
-				// Go, collect $200. {Second sentence omitted.} (Mr. Monopoly has tied a cloth
-				// bundle onto his cane to make a bindle, carried over his right shoulder, and
-				// is smoking a cigar)
+
+				// Advance to Illinois Avenue
+				boolean passedGo = Board.advancePlayer(player, Board.findStreetByName("Illinois Avenue"));
+
+				// If you pass Go, collect $200
+				if (passedGo) {
+					player.bank_balance += 200;
+				}
+
 			}
 		};
 		deck[2] = new ChanceCard("Advance to St. Charles Place.") {
