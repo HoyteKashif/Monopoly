@@ -128,7 +128,7 @@ class Game {
 					double_count++;
 				}
 				int sum = roll[0] + roll[1];
-				currentPlayer().setPosition(currentPlayer().getPosition() + sum);
+				currentPlayer().move(sum);
 				ret = true;
 
 				// TODO if the player rolls three sets of doubles, send the user to Jail
@@ -187,16 +187,16 @@ class Game {
 		return ret;
 	}
 
-	public void advancePlayer(Player player, int newPosition) {
-		int curPosition = player.getPosition();
-
-		player.setPosition(newPosition);
-
-		// If you pass Go
-		if (curPosition > newPosition) {
-			// collect $200
-			player.bank_balance += 200;
-		}
-	}
+//	public void advancePlayer(Player player, int newPosition) {
+//		int curPosition = player.getPosition();
+//
+//		player.setPosition(newPosition);
+//
+//		// If you pass Go
+//		if (curPosition > newPosition) {
+//			// collect $200
+//			player.bank_balance += 200;
+//		}
+//	}
 
 }

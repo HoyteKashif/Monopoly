@@ -39,17 +39,27 @@ public class Deck {
 		deck[2] = new ChanceCard("Advance to St. Charles Place.") {
 			@Override
 			public void action(Player player) {
-				// Advance to St. Charles Place. [Advance to Pall Mall] If you pass Go, collect
-				// $200. (Mr. Monopoly hurries along, hauling a little boy by the hand)
+
+				// Advance to St. Charles Place
+				boolean passedGo = Board.advancePlayer(player, Board.findStreetByName("St. Charles Place"));
+
+				// if you pass Go, collect $200
+				if (passedGo) {
+					player.bank_balance += 200;
+				}
 			}
 		};
 		deck[3] = new ChanceCard(
 				"Advance token to the nearest Utility. If unowned, you may buy it from the Bank. If owned, throw dice and pay owner a total 10 (ten) times the amount thrown.") {
 			@Override
 			public void action(Player player) {
-				// Advance token to the nearest Utility. If unowned, you may buy it from the
-				// Bank. If owned, throw dice and pay owner a total 10 (ten) times the amount
-				// thrown. (Mr. Monopoly trudges along with a huge battleship token on his back)
+				// Advance to the nearest Utility.
+				do {
+					player.setPosition(player.getPosition() + 1);
+				} while (!Board.isUtility(player.getPosition()));
+				// If unowned, you may buy it from the Bank.
+
+				// If owned, throw dice and pay owner a total 10 (ten) times the amount thrown.
 			}
 		};
 		deck[4] = new ChanceCard(

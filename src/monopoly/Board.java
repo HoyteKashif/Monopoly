@@ -100,6 +100,10 @@ public class Board {
 		return JAIL[0];
 	}
 
+	public static void main(String[] args) {
+		System.out.println(boardIndexOf(-1));
+	}
+
 	public static int boardIndexOf(int rawLocation) {
 		// https://www.geeksforgeeks.org/circular-array/
 		return rawLocation % board.length;
@@ -246,4 +250,6 @@ public class Board {
 
 		return false;
 	}
+	
+
 }
