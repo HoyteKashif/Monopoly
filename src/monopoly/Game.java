@@ -186,7 +186,7 @@ class Game {
 		}
 		return ret;
 	}
-
+	
 //	public void advancePlayer(Player player, int newPosition) {
 //		int curPosition = player.getPosition();
 //

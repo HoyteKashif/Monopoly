@@ -68,15 +68,24 @@ public class Bank {
 			System.exit(-1);
 		}
 	}
-	
-	
+
+	/**
+	 * Already Owned
+	 * 
+	 * @param location
+	 * @return true is already owned
+	 */
+	public static boolean isOwned(int location) {
+		return deeds[location] == null;
+	}
 
 	static boolean purchase(Player player, int location) {
 
 		IDeed deed = deeds[location];
 
-		// already owned
-		if (deed == null)
+		boolean owned = isOwned(location);
+
+		if (owned)
 			return false;
 
 		float price = 0;

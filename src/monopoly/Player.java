@@ -22,7 +22,7 @@ public class Player {
 
 	Player(String name) {
 		this.name = name;
-		this.deeds = new IDeed[40];
+		this.deeds = new IDeed[Bank.deeds.length];
 	}
 
 	public int getPosition() {
@@ -63,13 +63,9 @@ public class Player {
 		System.out.println("move (ValueToMove=" + valueToMove + ";CurrentPosition=" + curPosition + ";ArrayLength="
 				+ arrLength + ")");
 		int ret;
-		if (valueToMove < 0) {
-			ret = curPosition + valueToMove;
-			while (ret < 0) {
-				ret = arrLength + ret;
-			}
-		} else {
-			ret = curPosition + valueToMove;
+		ret = curPosition + valueToMove;
+		while (ret < 0) {
+			ret = arrLength + ret;
 		}
 
 		return ret % arrLength;

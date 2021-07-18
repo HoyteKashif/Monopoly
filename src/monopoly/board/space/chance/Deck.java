@@ -55,11 +55,11 @@ public class Deck {
 			public void action(Player player) {
 				// Advance to the nearest Utility.
 				do {
-					player.setPosition(player.getPosition() + 1);
+					player.move(1);
 				} while (!Board.isUtility(player.getPosition()));
 				// If unowned, you may buy it from the Bank.
 
-				// If owned, throw dice and pay owner a total 10 (ten) times the amount thrown.
+				// TODO If owned, throw dice and pay owner a total 10 (ten) times the amount thrown.
 			}
 		};
 		deck[4] = new ChanceCard(
