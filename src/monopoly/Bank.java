@@ -1,7 +1,5 @@
 package monopoly;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
 import monopoly.board.space.property.deed.Deed;
 import monopoly.board.space.property.deed.IDeed;
 import monopoly.board.space.property.deed.RailRoadDeed;
@@ -11,63 +9,6 @@ import monopoly.board.space.property.deed.UtilityDeed;
 public class Bank {
 
 	public static final IDeed[] deeds = new Deed[40];
-
-	static {
-		try {
-			JsonNode arrNode = JsonParser.rootJsonArrayNode();
-
-			for (JsonNode node : arrNode) {
-
-				String type = node.findValue("type").asText();
-				int space = node.findValue("space").asInt();
-
-				if (type.equals("property")) {
-					deeds[--space] = JsonParser.newStreetDeed(node);
-				}
-
-				if (type.equals("railroad")) {
-					deeds[--space] = JsonParser.newRailroadDeed(node);
-				}
-
-				if (type.equals("utility")) {
-					deeds[--space] = JsonParser.newUtilityDeed(node);
-				}
-
-				if (type.equals("chance")) {
-					--space;
-				}
-
-				if (type.equals("community chest")) {
-					--space;
-				}
-
-				if (type.equals("jail")) {
-					--space;
-				}
-
-				// actually get sent to jail
-				if (type.equals("go to jail")) {
-					--space;
-				}
-
-				if (type.equals("start")) {
-					--space;
-				}
-
-				if (type.equals("tax")) {
-					--space;
-				}
-
-				if (type.equals("free parking")) {
-					--space;
-				}
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace(System.err);
-			System.exit(-1);
-		}
-	}
 
 	/**
 	 * Already Owned

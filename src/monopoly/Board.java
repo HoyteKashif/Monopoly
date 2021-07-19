@@ -1,20 +1,12 @@
 package monopoly;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
-import monopoly.board.space.FreeParking;
-import monopoly.board.space.Go;
 import monopoly.board.space.GoToJail;
 import monopoly.board.space.ISpace;
-import monopoly.board.space.Jail;
-import monopoly.board.space.chance.Chance;
-import monopoly.board.space.communitychest.CommunityChest;
 import monopoly.board.space.property.IProperty;
 import monopoly.board.space.property.Property;
 import monopoly.board.space.property.RailRoad;
 import monopoly.board.space.property.Street;
 import monopoly.board.space.property.Utility;
-import monopoly.board.space.property.deed.StreetDeed;
 
 public class Board {
 	public static final Object[] board = new Object[40];
@@ -25,66 +17,6 @@ public class Board {
 
 	// used an int array because using a final int is not valid java
 	public static final int[] JAIL = new int[1];
-
-	static {
-		try {
-			JsonNode arrNode = JsonParser.rootJsonArrayNode();
-
-			for (JsonNode node : arrNode) {
-
-				String type = node.findValue("type").asText();
-				int space = node.findValue("space").asInt();
-
-				if (type.equals("property")) {
-					board[--space] = new Street((StreetDeed) JsonParser.newStreetDeed(node));
-				}
-
-				if (type.equals("railroad")) {
-					board[--space] = new RailRoad(JsonParser.newRailroadDeed(node));
-				}
-
-				if (type.equals("utility")) {
-					board[--space] = new Utility(JsonParser.newUtilityDeed(node));
-				}
-
-				if (type.equals("chance")) {
-					board[--space] = new Chance();
-				}
-
-				if (type.equals("community chest")) {
-					board[--space] = new CommunityChest();
-				}
-
-				// jail/ just waiting
-				if (type.equals("jail")) {
-					board[--space] = new Jail();
-					JAIL[0] = space;
-				}
-
-				// actually get sent to jail
-				if (type.equals("go to jail")) {
-					board[--space] = new GoToJail();
-				}
-
-				if (type.equals("start")) {
-					board[--space] = new Go();
-				}
-
-				if (type.equals("tax")) {
-					board[--space] = JsonParser.newTax(node);
-				}
-
-				if (type.equals("free parking")) {
-					board[--space] = new FreeParking();
-				}
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace(System.err);
-			System.exit(-1);
-		}
-
-	}
 
 	public static boolean isGoToJail(int i) {
 		requireValidLocation(i);

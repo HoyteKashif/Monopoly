@@ -9,10 +9,24 @@ import java.util.Stack;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
 
+import monopoly.board.space.FreeParking;
+import monopoly.board.space.Go;
+import monopoly.board.space.GoToJail;
+import monopoly.board.space.Jail;
+import monopoly.board.space.chance.Chance;
 import monopoly.board.space.chance.ChanceCard;
 import monopoly.board.space.chance.Deck;
+import monopoly.board.space.communitychest.CommunityChest;
 import monopoly.board.space.property.IProperty;
+import monopoly.board.space.property.RailRoad;
+import monopoly.board.space.property.Street;
+import monopoly.board.space.property.Utility;
+import monopoly.board.space.property.deed.IDeed;
+import monopoly.board.space.property.deed.RailRoadDeed;
+import monopoly.board.space.property.deed.StreetDeed;
+import monopoly.board.space.property.deed.UtilityDeed;
 
 class Game {
 
@@ -24,6 +38,70 @@ class Game {
 	int double_count = 0;
 
 	Stack<ChanceCard> chanceCardStack;
+
+	static {
+		try {
+			JsonNode arrNode = JsonParser.rootJsonArrayNode();
+			for (JsonNode node : arrNode) {
+
+				String type = node.findValue("type").asText();
+
+				// location in any property array
+				int idx = node.findValue("space").asInt() - 1;
+
+				if (type.equals("property")) {
+					IDeed deed = JsonParser.newStreetDeed(node);
+					Bank.deeds[idx] = deed;
+					Board.board[idx] = new Street((StreetDeed) deed);
+				}
+
+				if (type.equals("railroad")) {
+					IDeed deed = JsonParser.newRailroadDeed(node);
+					Bank.deeds[idx] = deed;
+					Board.board[idx] = new RailRoad((RailRoadDeed) deed);
+				}
+
+				if (type.equals("utility")) {
+					IDeed deed = JsonParser.newUtilityDeed(node);
+					Bank.deeds[idx] = deed;
+					Board.board[idx] = new Utility((UtilityDeed) deed);
+				}
+
+				if (type.equals("chance")) {
+					Board.board[idx] = new Chance();
+				}
+
+				if (type.equals("community chest")) {
+					Board.board[idx] = new CommunityChest();
+				}
+
+				// jail/ just waiting
+				if (type.equals("jail")) {
+					Board.board[idx] = new Jail();
+					Board.JAIL[0] = idx;
+				}
+
+				// actually get sent to jail
+				if (type.equals("go to jail")) {
+					Board.board[idx] = new GoToJail();
+				}
+
+				if (type.equals("start")) {
+					Board.board[idx] = new Go();
+				}
+
+				if (type.equals("tax")) {
+					Board.board[idx] = JsonParser.newTax(node);
+				}
+
+				if (type.equals("free parking")) {
+					Board.board[idx] = new FreeParking();
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	Game() {
 	}
@@ -186,7 +264,7 @@ class Game {
 		}
 		return ret;
 	}
-	
+
 //	public void advancePlayer(Player player, int newPosition) {
 //		int curPosition = player.getPosition();
 //
