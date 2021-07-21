@@ -4,8 +4,11 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.Stack;
 
+import monopoly.Bank;
 import monopoly.Board;
+import monopoly.Dice;
 import monopoly.Player;
+import monopoly.board.space.Go;
 
 public class Deck {
 	private static final ChanceCard[] deck = new ChanceCard[16];
@@ -56,10 +59,18 @@ public class Deck {
 				// Advance to the nearest Utility.
 				do {
 					player.move(1);
+					if (Board.board[player.getPosition()] instanceof Go) {
+						player.bank_balance += 200;
+					}
 				} while (!Board.isUtility(player.getPosition()));
 				// If unowned, you may buy it from the Bank.
 
-				// TODO If owned, throw dice and pay owner a total 10 (ten) times the amount thrown.
+				// If owned, throw dice and pay owner a total 10 (ten) times the amount
+				// thrown.
+				if (Bank.isOwned(player.getPosition())) {
+					int[] roll = Dice.roll();
+					player.bank_balance = (roll[0] + roll[1]) * 10;
+				}
 			}
 		};
 		deck[4] = new ChanceCard(

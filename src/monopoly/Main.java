@@ -3,19 +3,12 @@ package monopoly;
 import java.io.IOException;
 
 // TODO July 1, 2021
-// 1. (done) bug: input is too sensitive
-// 	ex: " role" != "role"
-// 2. (done) when the user types my info they should also be shown 
-// the current player location group color and cost
 // 3. (might not do, instead look at creating "my info" and "info")change the command "my info" to "info"
 // 4. (later) add house/hotel purchasing behavior
-// 5. (done) my info not listed as command when "help" is typed
-// 6. (done) rolled dice prompt only needs to show the combined total of the dice
 // 7. (later) no mention of the dual options such as typing "buy" or "buy property" when
 // the user is prompted with the response to typing "help"
 // 8. (later) all response options are not shown to the user when they are prompted as
 // to whether or not they want to purchase a property
-// 9. (done)the user is not taken to Jail upon landing on it
 // 10. taxes are not collected when the user lands on either income tax or luxury tax
 // 11. the user is not collecting $200 when they pass GO
 // 12. check for any additional rules when the user roles doubles
