@@ -1,6 +1,5 @@
 package monopoly;
 
-
 public class PlayerQueue {
 
 	public Node currentPlayer = null;
@@ -30,6 +29,7 @@ public class PlayerQueue {
 	}
 
 	public void addNode(Player value) {
+
 		Node newNode = new Node(value);
 
 		if (head == null) {
@@ -119,5 +119,20 @@ public class PlayerQueue {
 				currentNode = currentNode.nextNode;
 			} while (currentNode != head);
 		}
+	}
+
+	public Player findOwner(int location) {
+		Node currentNode = head;
+
+		if (head != null) {
+			do {
+				Player p = currentNode.value;
+				if (p.deeds[location] != null) {
+					return p;
+				}
+			} while (currentNode != head);
+		}
+
+		return null;
 	}
 }

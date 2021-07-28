@@ -5,7 +5,6 @@ import static java.lang.System.out;
 
 import java.io.IOException;
 import java.util.Scanner;
-import java.util.Stack;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -28,16 +27,16 @@ import monopoly.board.space.property.deed.RailRoadDeed;
 import monopoly.board.space.property.deed.StreetDeed;
 import monopoly.board.space.property.deed.UtilityDeed;
 
-class Game {
+public class Game {
 
 	// https://stackoverflow.com/questions/30249324/how-to-get-java-to-wait-for-user-input/30249614
 	private Scanner in = new Scanner(System.in);
 
-	PlayerQueue playerQueue;
+	public final PlayerQueue playerQueue;
 
 	int double_count = 0;
 
-	Stack<ChanceCard> chanceCardStack;
+	Deck chanceCardDeck;
 
 	static {
 		try {
@@ -104,14 +103,10 @@ class Game {
 	}
 
 	Game() {
+		this.playerQueue = new PlayerQueue();
 	}
 
 	public void add(Player player) {
-
-		if (playerQueue == null) {
-			playerQueue = new PlayerQueue();
-		}
-
 		playerQueue.addNode(player);
 	}
 
@@ -120,7 +115,7 @@ class Game {
 		// queue up the first player
 		playerQueue.advance();
 
-		chanceCardStack = Deck.newStack();
+		chanceCardDeck = new Deck(this);
 
 		// game loop
 		while (playing())
@@ -142,15 +137,6 @@ class Game {
 
 		out.println("Thanks for playing!");
 		exit(0);
-	}
-
-	public ChanceCard nextChanceCard() {
-
-		if (chanceCardStack == null || chanceCardStack.isEmpty()) {
-			chanceCardStack = Deck.newStack();
-		}
-
-		return chanceCardStack.pop();
 	}
 
 	public boolean playing() {
@@ -216,7 +202,7 @@ class Game {
 					System.out.println("landed on chance");
 
 					// take a card from the deck
-					ChanceCard chanceCard = nextChanceCard();
+					ChanceCard chanceCard = chanceCardDeck.getNext();
 					System.out.println("Chance: " + chanceCard.getDescription());
 
 					// run the action
@@ -264,17 +250,5 @@ class Game {
 		}
 		return ret;
 	}
-
-//	public void advancePlayer(Player player, int newPosition) {
-//		int curPosition = player.getPosition();
-//
-//		player.setPosition(newPosition);
-//
-//		// If you pass Go
-//		if (curPosition > newPosition) {
-//			// collect $200
-//			player.bank_balance += 200;
-//		}
-//	}
 
 }
