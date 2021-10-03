@@ -1,5 +1,7 @@
 package monopoly;
 
+import java.util.function.Consumer;
+
 public class PlayerQueue {
 
 	public Node currentPlayer = null;
@@ -108,6 +110,16 @@ public class PlayerQueue {
 			}
 			currentNode = nextNode;
 		} while (currentNode != head);
+	}
+
+	public void apply(Consumer<Player> func) {
+		if (head == null)
+			return;
+
+		Node node = head;
+		do {
+			func.accept(node.value);
+		} while ((node = node.nextNode) != head);
 	}
 
 	public void traverseList() {

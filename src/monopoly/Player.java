@@ -64,6 +64,7 @@ public class Player {
 				+ arrLength + ")");
 		int ret;
 		ret = curPosition + valueToMove;
+		
 		while (ret < 0) {
 			ret = arrLength + ret;
 		}

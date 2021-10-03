@@ -205,6 +205,8 @@ public class Game {
 					ChanceCard chanceCard = chanceCardDeck.getNext();
 					System.out.println("Chance: " + chanceCard.getDescription());
 
+					
+					
 					// run the action
 					chanceCard.action(currentPlayer());
 
