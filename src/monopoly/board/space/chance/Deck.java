@@ -75,7 +75,7 @@ public class Deck {
 				player.setPosition(0);
 
 				// Advance to "Go". (Collect $200)
-				player.bank_balance += 200;
+				player.addCash(200);
 
 			}
 		};
@@ -88,7 +88,7 @@ public class Deck {
 
 				// If you pass Go, collect $200
 				if (passedGo) {
-					player.bank_balance += 200;
+					player.addCash(200);
 				}
 
 			}
@@ -102,7 +102,7 @@ public class Deck {
 
 				// if you pass Go, collect $200
 				if (passedGo) {
-					player.bank_balance += 200;
+					player.addCash(200);
 				}
 			}
 		};
@@ -114,7 +114,7 @@ public class Deck {
 				do {
 					player.move(1);
 					if (Board.board[player.getPosition()] instanceof Go) {
-						player.bank_balance += 200;
+						player.addCash(200);
 					}
 				} while (!Board.isUtility(player.getPosition()));
 				// If unowned, you may buy it from the Bank.
@@ -127,11 +127,11 @@ public class Deck {
 
 					int rentOwed = (roll[0] + roll[1]) * 10;
 
-					player.bank_balance = rentOwed;
+					player.subtractCash(rentOwed);
 
 					// determine the owner
 					Player owner = game.playerQueue.findOwner(player.getPosition());
-					owner.bank_balance += rentOwed;
+					owner.addCash(rentOwed);
 				}
 			}
 		};
@@ -143,7 +143,7 @@ public class Deck {
 				do {
 					player.move(1);
 					if (Board.board[player.getPosition()] instanceof Go) {
-						player.bank_balance += 200;
+						player.addCash(200);
 					}
 				} while (!Board.isRailRoad(player.getPosition()));
 
@@ -157,11 +157,11 @@ public class Deck {
 
 					int rentOwed = (roll[0] + roll[1]) * 10;
 
-					player.bank_balance = rentOwed;
+					player.subtractCash(rentOwed);
 
 					// determine the owner
 					Player owner = game.playerQueue.findOwner(player.getPosition());
-					owner.bank_balance += rentOwed;
+					owner.addCash(rentOwed);
 				}
 			}
 		};
@@ -169,7 +169,7 @@ public class Deck {
 			@Override
 			public void action(Player player) {
 				// Bank pays you dividend of $50.
-				player.bank_balance += 50;
+				player.addCash(50);
 			}
 		};
 		deck[6] = new ChanceCard("Get out of Jail Free.") {
@@ -204,14 +204,14 @@ public class Deck {
 				// hotel {pay} $100.(Consulting a "How to Fix It" brochure, a hammer-wielding
 				// Mr. Monopoly sits astride a house not much larger than he is; it buckles
 				// under his weight)
+				System.err.println("Unimplemented Chance Card (Make General repairs on all your property)");
 			}
 		};
 		deck[10] = new ChanceCard("Pay poor tax of $15") {
 			@Override
 			public void action(Player player) {
-				// Pay poor tax of $15 (His trouser pockets pulled out to show them empty, Mr.
-				// Monopoly spreads his hands) (The video game version replaces this with
-				// Speeding fine $15, reportedly also in the UK version.)
+				// Pay poor tax of $15
+				player.subtractCash(15);
 			}
 		};
 		deck[11] = new ChanceCard("Take a trip to Reading Railroad.") {
@@ -222,7 +222,7 @@ public class Deck {
 				do {
 					player.move(1);
 					if (Board.board[player.getPosition()] instanceof Go) {
-						player.bank_balance += 200;
+						player.addCash(200);
 					}
 					foundRailRoad = Board.getLocationName(player.getPosition()).equals("Reading Railroad");
 				} while (!foundRailRoad);
@@ -239,7 +239,7 @@ public class Deck {
 				do {
 					player.move(1);
 					if (Board.board[player.getPosition()] instanceof Go) {
-						player.bank_balance += 200;
+						player.addCash(200);
 					}
 					foundBoardwalk = Board.getLocationName(player.getPosition()).equals("Boardwalk");
 				} while (!foundBoardwalk);
@@ -251,25 +251,24 @@ public class Deck {
 				// You have been elected Chairman of the Board. Pay each player $50. (A newsboy
 				// shouts an Extra with Mr. Monopoly's headshot on its front page)
 				game.playerQueue.apply(p -> {
-					player.bank_balance -= 50;
-					p.bank_balance += 50;
+					player.subtractCash(50);
+					p.addCash(50);
 				});
 			}
 		};
 		deck[14] = new ChanceCard("Your building {and} loan matures. Receive $150.") {
 			@Override
 			public void action(Player player) {
-				// Your building {and} loan matures. Receive {Collect} $150. {Up until the 1980s
-				// a "building and loan" was a financial institution.} (Mr. Monopoly joyfully
-				// embraces an apparent wife)
-
+				// Your building {and} loan matures. Receive {Collect} $150
+				System.err.println("Unimplemented Chance Card (Your building {and} loan matures. Receive $150.)");
+				player.addCash(150);
 			}
 		};
 		deck[15] = new ChanceCard("You have won a crossword competition. Collect $100.") {
 			@Override
 			public void action(Player player) {
 				// You have won a crossword competition. Collect $100. {Not in the deck}
-				player.bank_balance += 100;
+				player.addCash(100);
 			}
 		};
 	}

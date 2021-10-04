@@ -1,5 +1,7 @@
 package monopoly;
 
+import java.math.BigDecimal;
+
 import monopoly.board.space.property.deed.Deed;
 import monopoly.board.space.property.deed.IDeed;
 import monopoly.board.space.property.deed.RailRoadDeed;
@@ -53,10 +55,10 @@ public class Bank {
 		// end of the players property list
 		// and remove the property deed from the
 		// deeds list held by the Bank
-		if (price <= player.bank_balance) {
-			System.out.println("current balance: " + player.bank_balance);
-			player.bank_balance -= price;
-			System.out.println("new balance: " + player.bank_balance);
+		if (player.getCashBalance().compareTo(BigDecimal.valueOf(price)) >= 0) {
+			System.out.println("current balance: " + player.getCashBalance());
+			player.subtractCash(price);
+			System.out.println("new balance: " + player.getCashBalance());
 			player.deeds[location] = deed;
 			deeds[location] = null;
 			return true;

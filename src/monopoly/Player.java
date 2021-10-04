@@ -1,5 +1,6 @@
 package monopoly;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.logging.Logger;
 
@@ -14,7 +15,7 @@ public class Player {
 	private int position = 0;
 
 	// initial bank balance is $1500
-	public int bank_balance = 1500;
+	private BigDecimal cashBalance = BigDecimal.valueOf(1500);
 
 	final IDeed[] deeds;
 
@@ -23,6 +24,50 @@ public class Player {
 	Player(String name) {
 		this.name = name;
 		this.deeds = new IDeed[Bank.deeds.length];
+	}
+
+	// FIXME
+	// add buildings
+	public BigDecimal getTotalWorth() {
+		BigDecimal totalWorth = BigDecimal.ZERO;
+
+		// add cash balance
+		totalWorth = totalWorth.add(getCashBalance());
+
+		// add price of deeds
+		for (IDeed deed : deeds) {
+			if (deed != null) {
+				totalWorth = totalWorth.add(BigDecimal.valueOf(deed.price()));
+			}
+		}
+
+		// add worth of buildings
+
+		return totalWorth;
+	}
+
+	public BigDecimal getCashBalance() {
+		return cashBalance;
+	}
+
+	public void addCash(int amount) {
+		addCash(BigDecimal.valueOf(amount));
+	}
+
+	public void addCash(BigDecimal amount) {
+		this.cashBalance = this.cashBalance.add(amount);
+	}
+
+	public void subtractCash(int amount) {
+		subtractCash(BigDecimal.valueOf(amount));
+	}
+
+	public void subtractCash(float amount) {
+		subtractCash(BigDecimal.valueOf(amount));
+	}
+
+	public void subtractCash(BigDecimal amount) {
+		this.cashBalance = this.cashBalance.subtract(amount);
 	}
 
 	public int getPosition() {
@@ -40,16 +85,6 @@ public class Player {
 		this.position = Board.boardIndexOf(p_position);
 	}
 
-	// function move (value)
-	// value < 0
-//			result = current-position + (value)
-//			if current-value < 0
-//				return array.length - result
-//			return result
-//			value >= 0
-//				return (current-position) + value) % array.length
-	//
-
 	public void move(int valueToMove) {
 		setPosition(move(valueToMove, position, Board.board.length));
 	}
@@ -64,7 +99,7 @@ public class Player {
 				+ arrLength + ")");
 		int ret;
 		ret = curPosition + valueToMove;
-		
+
 		while (ret < 0) {
 			ret = arrLength + ret;
 		}

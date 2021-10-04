@@ -4,6 +4,7 @@ import static java.lang.System.exit;
 import static java.lang.System.out;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Scanner;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -14,6 +15,7 @@ import monopoly.board.space.FreeParking;
 import monopoly.board.space.Go;
 import monopoly.board.space.GoToJail;
 import monopoly.board.space.Jail;
+import monopoly.board.space.Tax;
 import monopoly.board.space.chance.Chance;
 import monopoly.board.space.chance.ChanceCard;
 import monopoly.board.space.chance.Deck;
@@ -124,8 +126,12 @@ public class Game {
 		quit();
 	}
 
-	Player currentPlayer() {
+	Player getCurrentPlayer() {
 		return playerQueue.currentPlayer.value;
+	}
+
+	boolean currentPlayerOnChance() {
+		return Board.isChance(getCurrentPlayer().getPosition());
 	}
 
 	public void quit() {
@@ -139,6 +145,7 @@ public class Game {
 		exit(0);
 	}
 
+	// - single player loops playing non-stop, until they pass the dice
 	public boolean playing() {
 		System.out.println("your move?");
 
@@ -156,10 +163,11 @@ public class Game {
 				ret = true;
 			}
 
+			// allows for easy player position testing
 			try {
 				int i = Integer.parseInt(input);
 				System.out.println("[" + i + "]");
-				currentPlayer().setPosition(Integer.parseInt(input));
+				getCurrentPlayer().setPosition(Integer.parseInt(input));
 				ret = true;
 			} catch (NumberFormatException e) {
 			}
@@ -172,13 +180,13 @@ public class Game {
 			}
 
 			if (input.equals("my info")) {
-				out.println("Current location: " + Board.toString(currentPlayer().getPosition()));
-				out.println("Bank Balance: $" + currentPlayer().bank_balance);
+				out.println("Current location: " + Board.toString(getCurrentPlayer().getPosition()));
+				out.println("Bank Balance: $" + getCurrentPlayer().getCashBalance());
 				ret = true;
 			}
 
 			if (input.equals("help")) {
-				out.println("options: buy, my info, roll and quit");
+				out.println("options: buy, my info, pass, roll and quit");
 				ret = true;
 			}
 
@@ -187,36 +195,72 @@ public class Game {
 			}
 
 			if (input.equals("roll")) {
+
+				// move the player
 				int[] roll = Dice.roll();
 				if (roll[0] == roll[1]) {
 					double_count++;
 				}
 				int sum = roll[0] + roll[1];
-				currentPlayer().move(sum);
-				ret = true;
-
-				// TODO if the player rolls three sets of doubles, send the user to Jail
+				getCurrentPlayer().move(sum);
 
 				// check whether the player landed on chance
-				if (Board.isChance(currentPlayer().getPosition())) {
+				if (currentPlayerOnChance()) {
 					System.out.println("landed on chance");
 
 					// take a card from the deck
 					ChanceCard chanceCard = chanceCardDeck.getNext();
 					System.out.println("Chance: " + chanceCard.getDescription());
 
-					
-					
 					// run the action
-					chanceCard.action(currentPlayer());
+					chanceCard.action(getCurrentPlayer());
 
 				}
+
+				// handle if they landed on tax space
+				if (Board.isTax(getCurrentPlayer().getPosition())) {
+					Tax tax = Board.getTax(getCurrentPlayer().getPosition());
+					System.out.println("landed on " + tax.name());
+
+					do {
+						// ask the user which option to go with either percentage or dollar
+						if (tax.hasPercentOption()) {
+							out.println("You have two options pay $" + tax.getAmountInDollar() + " or pay "
+									+ tax.getAmountInPercent()
+									+ "% of your total worth in cash, properties and buildings.");
+							out.println("Bank Balance: $" + getCurrentPlayer().getCashBalance());
+							out.println("type d for dollar or p for percent: ");
+							input = in.nextLine();
+						} else {
+							out.println("You have to pay $" + tax.getAmountInDollar());
+							input = "d";
+						}
+
+						if (input.equals("d")) {
+							out.println("applying " + tax.name());
+							getCurrentPlayer().subtractCash(BigDecimal.valueOf(tax.getAmountInDollar()));
+							out.println("Bank Balance: $" + getCurrentPlayer().getCashBalance());
+							break;
+						} else if (input.equals("p")) {
+							out.println("applying " + tax.name());
+
+							BigDecimal taxOwed = getCurrentPlayer().getTotalWorth().multiply(tax.getAmountInPercent());
+
+							getCurrentPlayer().subtractCash(taxOwed);
+							out.println("Bank Balance: $" + getCurrentPlayer().getCashBalance());
+							break;
+						}
+
+					} while (true);
+				}
+
+				ret = true;
 
 			}
 
 			if (input.contentEquals("buy") || input.equals("buy property")) {
 
-				int location = currentPlayer().getPosition();
+				int location = getCurrentPlayer().getPosition();
 
 				if (Board.isProperty(location)) {
 					IProperty property = Board.getProperty(location);
@@ -227,7 +271,7 @@ public class Game {
 					input = in.nextLine();
 
 					if (input.equals("y") || input.equals("yes")) {
-						if (Bank.purchase(currentPlayer(), location))
+						if (Bank.purchase(getCurrentPlayer(), location))
 							out.println("purchase was successful!");
 						else
 							out.println("purchase was unsuccessful!");
@@ -242,8 +286,9 @@ public class Game {
 
 			}
 
-			if (Board.isGoToJail(currentPlayer().getPosition())) {
-				currentPlayer().setPosition(Board.jail());
+			// must be last action
+			if (Board.isGoToJail(getCurrentPlayer().getPosition())) {
+				getCurrentPlayer().setPosition(Board.jail());
 			}
 
 		} catch (Exception e) {

@@ -2,6 +2,7 @@ package monopoly;
 
 import monopoly.board.space.GoToJail;
 import monopoly.board.space.ISpace;
+import monopoly.board.space.Tax;
 import monopoly.board.space.property.IProperty;
 import monopoly.board.space.property.Property;
 import monopoly.board.space.property.RailRoad;
@@ -15,7 +16,15 @@ public class Board {
 
 	public static final int[] CHANCE = { 7, 22, 36 };
 
-	// used an int array because using a final int is not valid java
+	/**
+	 * used an array of type integer because using a final integer is not valid
+	 * java, this is found during the building parsing of the JSON which represents
+	 * the board
+	 * 
+	 */
+	// FIXME this should just be replaced with a final integer since the value can
+	// just
+	// be read by me
 	public static final int[] JAIL = new int[1];
 
 	public static boolean isGoToJail(int i) {
@@ -89,6 +98,22 @@ public class Board {
 		return get(i, Utility.class);
 	}
 
+	/**
+	 * Determine whether the given space, found by it's position value, is of type
+	 * Tax
+	 * 
+	 * @param i position of the space
+	 * @return true if the space is of type Tax, false otherwise
+	 */
+	public static boolean isTax(int i) {
+		return board[i] instanceof Tax;
+	}
+
+	public static Tax getTax(int i) {
+		requireValidLocation(i);
+		return get(i, Tax.class);
+	}
+
 	public static boolean isRailRoad(int i) {
 		requireValidLocation(i);
 		return board[i] instanceof RailRoad;
@@ -98,22 +123,42 @@ public class Board {
 		return get(i, RailRoad.class);
 	}
 
+	/**
+	 * Determine whether the given space, found by it's position value
+	 * 
+	 * @param i position of the space to get
+	 * @return boolean true if the space is of type Street, false otherwise
+	 */
 	public static boolean isStreet(int i) {
 		requireValidLocation(i);
 		return board[i] instanceof Street;
 	}
 
+	/**
+	 * Get the Street Wrapper for the given space, found by it's position value
+	 * 
+	 * @param i position of the space to get
+	 * @return Street
+	 */
 	public static Street getStreet(int i) {
 		return get(i, Street.class);
 	}
 
-	public static <T> T get(int i, Class<T> clas) {
+	/**
+	 * Get the Object Wrapper for the Space, found by it's position value
+	 * 
+	 * @param <T>
+	 * @param i     position of space to get
+	 * @param clazz space wrapper class for the space
+	 * @return Object returned as the Space Wrapper object
+	 */
+	public static <T> T get(int i, Class<T> clazz) {
 
 		Object o = board[i];
-		if (clas.isInstance(o)) {
-			return clas.cast(o);
+		if (clazz.isInstance(o)) {
+			return clazz.cast(o);
 		}
-		throw new IllegalArgumentException("space " + i + " is not of type " + clas.getSimpleName());
+		throw new IllegalArgumentException("space " + i + " is not of type " + clazz.getSimpleName());
 	}
 
 	public static void requireValidLocation(int i) {
