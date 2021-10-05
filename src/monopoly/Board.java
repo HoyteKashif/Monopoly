@@ -1,5 +1,10 @@
 package monopoly;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import monopoly.board.space.GoToJail;
 import monopoly.board.space.ISpace;
 import monopoly.board.space.Tax;
@@ -8,9 +13,12 @@ import monopoly.board.space.property.Property;
 import monopoly.board.space.property.RailRoad;
 import monopoly.board.space.property.Street;
 import monopoly.board.space.property.Utility;
+import monopoly.board.space.property.deed.StreetDeed;
 
 public class Board {
 	public static final Object[] board = new Object[40];
+
+	public static final Map<String, List<Street>> streetColorGroups = new HashMap<>();
 
 	public static final int[] COMMUNITY_CHEST = { 2, 17, 33 };
 
@@ -26,6 +34,42 @@ public class Board {
 	// just
 	// be read by me
 	public static final int[] JAIL = new int[1];
+
+	public static void initColorGrouping() {
+		for (int i = 0; i < board.length; i++) {
+			if (isStreet(i)) {
+				Street street = getStreet(i);
+				String colorGroup = ((StreetDeed) street.deed()).colorGroup();
+				if (streetColorGroups.containsKey(colorGroup)) {
+					streetColorGroups.get(colorGroup).add(street);
+				} else {
+					List<Street> streets = new ArrayList<>();
+					streets.add(street);
+					streetColorGroups.put(colorGroup, streets);
+				}
+			}
+		}
+	}
+
+	public static Map<String, List<Street>> getStreetsByColorGroup() {
+
+		Map<String, List<Street>> map = new HashMap<>();
+		for (int i = 0; i < board.length; i++) {
+			if (isStreet(i)) {
+				Street street = getStreet(i);
+				String colorGroup = ((StreetDeed) street.deed()).colorGroup();
+				if (map.containsKey(colorGroup)) {
+					map.get(colorGroup).add(street);
+				} else {
+					List<Street> streets = new ArrayList<>();
+					streets.add(street);
+					map.put(colorGroup, streets);
+				}
+			}
+		}
+		System.out.println(map.size());
+		return map;
+	}
 
 	public static boolean isGoToJail(int i) {
 		requireValidLocation(i);

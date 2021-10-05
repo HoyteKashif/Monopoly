@@ -5,6 +5,9 @@ import static java.lang.System.out;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map.Entry;
 import java.util.Scanner;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -99,6 +102,8 @@ public class Game {
 					Board.board[idx] = new FreeParking();
 				}
 			}
+			Board.initColorGrouping();
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -119,6 +124,9 @@ public class Game {
 
 		chanceCardDeck = new Deck(this);
 
+		Bank.purchase(getCurrentPlayer(), 2);
+		Bank.purchase(getCurrentPlayer(), 4);
+		
 		// game loop
 		while (playing())
 			;
@@ -182,6 +190,17 @@ public class Game {
 			if (input.equals("my info")) {
 				out.println("Current location: " + Board.toString(getCurrentPlayer().getPosition()));
 				out.println("Bank Balance: $" + getCurrentPlayer().getCashBalance());
+				out.print("Owned Properties: [");
+				List<String> properties = new ArrayList<>();
+				for (IDeed deed : getCurrentPlayer().deeds) {
+					if (deed instanceof StreetDeed) {
+						StreetDeed streetDeed = (StreetDeed) deed;
+						properties.add(streetDeed.name() + "(" + streetDeed.colorGroup() + ")");
+					}
+				}
+				out.print(String.join(", ", properties));
+				out.println("]");
+
 				ret = true;
 			}
 
@@ -256,9 +275,10 @@ public class Game {
 
 				ret = true;
 
+				out.println("new location " + Board.getLocationName(getCurrentPlayer().getPosition()));
 			}
 
-			if (input.contentEquals("buy") || input.equals("buy property")) {
+			if (input.equals("buy property")) {
 
 				int location = getCurrentPlayer().getPosition();
 
@@ -283,6 +303,80 @@ public class Game {
 					out.println(Board.getLocationName(location) + " cannot be purchased");
 				}
 				ret = true;
+
+			}
+
+			/**
+			 * The game has only 32 houses and 12 hotels. When the buildings have been
+			 * purchased and are in use in the game, the rules say that no more houses and
+			 * hotels can be bought. This building moratorium can end if a player goes
+			 * bankrupt and return houses and hotels to the bank, chooses to sell them back
+			 * to the bank, or buys a hotel an returns the houses on the property to the
+			 * bank. <br>
+			 * <br>
+			 * Once the bank has these returned houses and hotels, they are available to be
+			 * bought by any player for their original price. A bidding war can ensue if
+			 * more than one player wants them, with the buildings going to the highest
+			 * bidder.
+			 */
+
+			/**
+			 * For instance, you can only buy houses on the yellow color group—Atlantic
+			 * Avenue, Ventnor Avenue, and Marvin Gardens—when you own all three properties
+			 * and none is mortgaged<br>
+			 * <br>
+			 * A key rule is that you must place houses evenly on your property. If you buy
+			 * one house and put it on one property, the next house you buy for that group
+			 * must go on another property, and so on. If you buy three houses at once for a
+			 * color group with three properties, you must put one house on each of the
+			 * three properties rather than, say, three houses on one property.
+			 */
+			boolean run = true;
+			if (run || input.equals("buy house")) {
+
+				List<StreetDeed> properties = getCurrentPlayer().getProperties();
+				if (!properties.isEmpty()) {
+					do {
+						// find properties with all the properties in a group already purchased
+						List<Entry<String, List<Street>>> eligibleGroups = new ArrayList<>();
+						for (Entry<String, List<Street>> entry : getCurrentPlayer().getGroupedProperties().entrySet()) {
+							if (entry.getValue().size() == Board.streetColorGroups.get(entry.getKey()).size()) {
+								eligibleGroups.add(entry);
+							}
+						}
+
+						if (eligibleGroups.isEmpty())
+							break;
+
+						// list the properties available for the upgrade
+						out.println("eligible properties [");
+						for (Entry<String, List<Street>> entry : eligibleGroups) {
+							int len = entry.getValue().size();
+							for (int i = 0; i < len; i++) {
+								out.print(entry.getValue().get(i));
+								if (i + 1 < len) {
+									out.print(", ");
+								}
+							}
+							out.println();
+						}
+						out.println("]");
+
+						break;
+					} while (true);
+				}
+
+			}
+
+			/**
+			 * When you have four houses on each property in a color group, you can buy a
+			 * hotel. You pay the bank the price listed for hotels on that property card and
+			 * give the bank the four houses that are on that property.
+			 * 
+			 * You can buy hotels one at a time and leave houses on the other properties in
+			 * the color group. Only one hotel can be bought for each property.
+			 */
+			if (input.equals("buy hotel")) {
 
 			}
 

@@ -2,9 +2,15 @@ package monopoly;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
+import monopoly.board.space.property.Street;
 import monopoly.board.space.property.deed.IDeed;
+import monopoly.board.space.property.deed.StreetDeed;
 import monopoly.shared.LogHelper;
 
 public class Player {
@@ -24,6 +30,37 @@ public class Player {
 	Player(String name) {
 		this.name = name;
 		this.deeds = new IDeed[Bank.deeds.length];
+	}
+
+	public List<StreetDeed> getProperties() {
+		List<StreetDeed> properties = new ArrayList<>();
+		for (IDeed deed : deeds) {
+			if (deed instanceof StreetDeed) {
+				properties.add((StreetDeed) deed);
+			}
+		}
+		return properties;
+	}
+
+	public Map<String, List<Street>> getGroupedProperties() {
+		Map<String, List<Street>> map = new HashMap<>();
+		for (int i = 0; i < deeds.length; i++) {
+			if (deeds[i] == null)
+				continue;
+
+			if (Board.isStreet(i)) {
+				Street street = Board.getStreet(i);
+				String colorGroup = ((StreetDeed) street.deed()).colorGroup();
+				if (map.containsKey(colorGroup)) {
+					map.get(colorGroup).add(street);
+				} else {
+					List<Street> streets = new ArrayList<>();
+					streets.add(street);
+					map.put(colorGroup, streets);
+				}
+			}
+		}
+		return map;
 	}
 
 	// FIXME

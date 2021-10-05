@@ -17,21 +17,16 @@ import java.io.IOException;
 // - if a player lands on a property and they do not wish to purchase
 // it allow their to be an auction. Bank sells the property to the highest bidder. Bidding may start at any price.
 public class Main {
+
 	public static void main(String[] args) {
-
 		try {
-
 			Game game = new Game();
-
 			game.add(new Player("kashif"));
 			game.add(new Player("damali"));
-
 			game.start();
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 }

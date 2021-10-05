@@ -231,10 +231,7 @@ public class Deck {
 		deck[12] = new ChanceCard("Take a walk on the Boardwalk. Advance token to Boardwalk.") {
 			@Override
 			public void action(Player player) {
-				// Take a walk on the Boardwalk. Advance token to Boardwalk. {Board Walk in both
-				// sentences} [Take a walk on the board walk. Advance token to Mayfair] (Mr.
-				// Monopoly, a smallish dog hung over one arm, with the other pushes a squalling
-				// baby in a small pram; behind them, birds fly in the sky above a low fence)
+				// Take a walk on the Boardwalk. Advance token to Boardwalk.
 				boolean foundBoardwalk = false;
 				do {
 					player.move(1);
@@ -248,11 +245,10 @@ public class Deck {
 		deck[13] = new ChanceCard("You have been elected Chairman of the Board. Pay each player $50.") {
 			@Override
 			public void action(Player player) {
-				// You have been elected Chairman of the Board. Pay each player $50. (A newsboy
-				// shouts an Extra with Mr. Monopoly's headshot on its front page)
-				game.playerQueue.apply(p -> {
+				// You have been elected Chairman of the Board. Pay each player $50.
+				game.playerQueue.apply(otherPlayer -> {
 					player.subtractCash(50);
-					p.addCash(50);
+					otherPlayer.addCash(50);
 				});
 			}
 		};
@@ -260,7 +256,6 @@ public class Deck {
 			@Override
 			public void action(Player player) {
 				// Your building {and} loan matures. Receive {Collect} $150
-				System.err.println("Unimplemented Chance Card (Your building {and} loan matures. Receive $150.)");
 				player.addCash(150);
 			}
 		};
