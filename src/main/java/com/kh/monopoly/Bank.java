@@ -2,13 +2,19 @@ package com.kh.monopoly;
 
 import java.math.BigDecimal;
 
+import org.apache.log4j.Logger;
+
 import com.kh.monopoly.board.space.property.deed.Deed;
 import com.kh.monopoly.board.space.property.deed.IDeed;
+import com.kh.monopoly.board.space.property.deed.Purchasable;
 import com.kh.monopoly.board.space.property.deed.RailRoadDeed;
 import com.kh.monopoly.board.space.property.deed.StreetDeed;
 import com.kh.monopoly.board.space.property.deed.UtilityDeed;
+import com.kh.monopoly.player.Player;
 
 public class Bank {
+
+	public static final Logger logger = Logger.getLogger(Bank.class);
 
 	public static final IDeed[] deeds = new Deed[40];
 
@@ -22,7 +28,13 @@ public class Bank {
 		return deeds[location] == null;
 	}
 
+	public static void insertDeed(int index, IDeed deed) {
+		logger.info("insert  " + deed + " at position " + index);
+		Bank.deeds[index] = deed;
+	}
+
 	static boolean purchase(Player player, int location) {
+		logger.info("purchase location=" + location + " by " + player);
 
 		IDeed deed = deeds[location];
 
@@ -33,21 +45,27 @@ public class Bank {
 
 		float price = 0;
 
-		if (deed instanceof RailRoadDeed) {
-			price = ((RailRoadDeed) deed).price();
-		}
-
-		if (deed instanceof StreetDeed) {
-			price = ((StreetDeed) deed).price();
-		}
-
-		if (deed instanceof UtilityDeed) {
-			price = ((UtilityDeed) deed).price();
-		}
-
-		if (price == 0) {
+		if (deed instanceof Purchasable) {
+			price = deed.price();
+		} else {
 			return false;
 		}
+
+//		if (deed instanceof RailRoadDeed) {
+//			price = ((RailRoadDeed) deed).price();
+//		}
+//
+//		if (deed instanceof StreetDeed) {
+//			price = ((StreetDeed) deed).price();
+//		}
+//
+//		if (deed instanceof UtilityDeed) {
+//			price = ((UtilityDeed) deed).price();
+//		}
+
+//		if (price == 0) {
+//			return false;
+//		}
 
 		// charge the player the purchase price
 		// if they can afford it
@@ -59,7 +77,7 @@ public class Bank {
 			System.out.println("current balance: " + player.getCashBalance());
 			player.subtractCash(price);
 			System.out.println("new balance: " + player.getCashBalance());
-			player.deeds[location] = deed;
+			player.getDeeds()[location] = deed;
 			deeds[location] = null;
 			return true;
 		}
@@ -67,6 +85,12 @@ public class Bank {
 		return false;
 	}
 
+	/**
+	 * 
+	 * @param location
+	 * @return
+	 * @throws NullPointerException
+	 */
 	static StreetDeed getStreetDeed(int location) throws NullPointerException {
 
 		if (!(deeds[location] instanceof StreetDeed))
@@ -75,6 +99,12 @@ public class Bank {
 		return (StreetDeed) deeds[location];
 	}
 
+	/**
+	 * 
+	 * @param location
+	 * @return
+	 * @throws IllegalArgumentException
+	 */
 	static UtilityDeed getUtilityDeed(int location) throws IllegalArgumentException {
 		if (!(deeds[location] instanceof UtilityDeed))
 			throw new IllegalArgumentException();
@@ -82,6 +112,12 @@ public class Bank {
 		return (UtilityDeed) deeds[location];
 	}
 
+	/**
+	 * 
+	 * @param location
+	 * @return
+	 * @throws IllegalArgumentException
+	 */
 	static RailRoadDeed getRailRoadDeed(int location) throws IllegalArgumentException {
 		if (!(deeds[location] instanceof RailRoadDeed))
 			throw new IllegalArgumentException();

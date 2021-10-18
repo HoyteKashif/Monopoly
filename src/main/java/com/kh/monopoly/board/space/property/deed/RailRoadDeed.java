@@ -4,7 +4,7 @@ package com.kh.monopoly.board.space.property.deed;
 // 2 railroads owned: $50
 // 3 railroads owned: $100
 // 4 railroads owned: $200
-public class RailRoadDeed extends Deed {
+public class RailRoadDeed extends Deed implements Purchasable{
 	final int oneOwned;
 	final int twoOwned;
 	final int threeOwned;

@@ -9,11 +9,21 @@ public class Dice {
 		Random rand = new Random();
 
 		int[] roll = new int[2];
-		roll[0] = (rand.nextInt(6) + 1);
-		roll[1] = (rand.nextInt(6) + 1);
 
-		System.out.println("rolled: " + (roll[0] + roll[1]));
+		System.out.print("Rolled ");
+
+		roll[0] = (rand.nextInt(6) + 1);
+		System.out.print("[" + roll[0] + "] ");
+
+		roll[1] = (rand.nextInt(6) + 1);
+		System.out.print("[" + roll[1] + "]\n");
+
 		return roll;
+	}
+
+	public static int rollMultipliedBy(int scalar) {
+		int[] roll = roll();
+		return (roll[0] + roll[1]) * 10;
 	}
 
 }

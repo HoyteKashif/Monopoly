@@ -1,6 +1,6 @@
 package com.kh.monopoly.board.space.chance;
 
-import com.kh.monopoly.Player;
+import com.kh.monopoly.player.Player;
 
 public abstract class ChanceCard {
 
@@ -14,5 +14,10 @@ public abstract class ChanceCard {
 
 	public String getDescription() {
 		return description;
+	}
+
+	@Override
+	public String toString() {
+		return "ChanceCard [description=" + description + "]";
 	}
 }

@@ -18,4 +18,10 @@ public class Property implements IProperty {
 	public IDeed deed() {
 		return deed;
 	}
+
+	@Override
+	public String toString() {
+		return "Property [deed=" + deed + "]";
+	}
+
 }

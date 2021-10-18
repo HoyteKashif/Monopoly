@@ -1,14 +1,16 @@
-package com.kh.monopoly;
+package com.kh.monopoly.player;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import com.kh.monopoly.Bank;
+import com.kh.monopoly.Board;
 import com.kh.monopoly.board.space.property.Street;
 import com.kh.monopoly.board.space.property.deed.IDeed;
 import com.kh.monopoly.board.space.property.deed.StreetDeed;
@@ -23,18 +25,26 @@ public class Player {
 	// initial bank balance is $1500
 	private BigDecimal cashBalance = BigDecimal.valueOf(1500);
 
-	final IDeed[] deeds;
+	private final IDeed[] deeds;
 
-	final String name;
+	private final String name;
 
-	Player(String name) {
+	public Player(String name) {
 		this.name = name;
 		this.deeds = new IDeed[Bank.deeds.length];
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public boolean owns(int i) {
+		return deeds[i] != null;
+	}
+
 	public List<StreetDeed> getProperties() {
 		List<StreetDeed> properties = new ArrayList<>();
-		for (IDeed deed : deeds) {
+		for (IDeed deed : getDeeds()) {
 			if (deed instanceof StreetDeed) {
 				properties.add((StreetDeed) deed);
 			}
@@ -44,8 +54,8 @@ public class Player {
 
 	public Map<String, List<Street>> getGroupedProperties() {
 		Map<String, List<Street>> map = new HashMap<>();
-		for (int i = 0; i < deeds.length; i++) {
-			if (deeds[i] == null)
+		for (int i = 0; i < getDeeds().length; i++) {
+			if (getDeeds()[i] == null)
 				continue;
 
 			if (Board.isStreet(i)) {
@@ -72,7 +82,7 @@ public class Player {
 		totalWorth = totalWorth.add(getCashBalance());
 
 		// add price of deeds
-		for (IDeed deed : deeds) {
+		for (IDeed deed : getDeeds()) {
 			if (deed != null) {
 				totalWorth = totalWorth.add(BigDecimal.valueOf(deed.price()));
 			}
@@ -92,6 +102,7 @@ public class Player {
 	}
 
 	public void addCash(BigDecimal amount) {
+		logger.info("add cash $" + amount + " " + this);
 		this.cashBalance = this.cashBalance.add(amount);
 	}
 
@@ -104,6 +115,7 @@ public class Player {
 	}
 
 	public void subtractCash(BigDecimal amount) {
+		logger.info("subtract cash $" + amount + " " + this);
 		this.cashBalance = this.cashBalance.subtract(amount);
 	}
 
@@ -112,8 +124,7 @@ public class Player {
 	}
 
 	public void setPosition(int p_position) {
-		logger.info(LocalDateTime.now().toString() + " position changed to [request=" + p_position + "; actual="
-				+ Board.boardIndexOf(p_position) + "]");
+		logger.info("set position [request=" + p_position + "; actual=" + Board.boardIndexOf(p_position) + "]");
 
 		if (p_position < 0) {
 			throw new IllegalArgumentException("Value is less than 0");
@@ -126,14 +137,9 @@ public class Player {
 		setPosition(move(valueToMove, position, Board.board.length));
 	}
 
-	public static void main(String[] args) {
-		System.out.println(move((Board.board.length * -2) + -5, 2, Board.board.length));
-		System.out.println(move(-3, 2, Board.board.length));
-	}
-
 	private static int move(int valueToMove, int curPosition, int arrLength) {
-		System.out.println("move (ValueToMove=" + valueToMove + ";CurrentPosition=" + curPosition + ";ArrayLength="
-				+ arrLength + ")");
+		logger.info("move [ValueToMove=" + valueToMove + ";CurrentPosition=" + curPosition + ";ArrayLength=" + arrLength
+				+ "]");
 		int ret;
 		ret = curPosition + valueToMove;
 
@@ -142,6 +148,16 @@ public class Player {
 		}
 
 		return ret % arrLength;
+	}
+
+	@Override
+	public String toString() {
+		return "Player [position=" + position + ", cashBalance=" + cashBalance + ", deeds="
+				+ Arrays.toString(getDeeds()) + ", name=" + name + "]";
+	}
+
+	public IDeed[] getDeeds() {
+		return deeds;
 	}
 
 }

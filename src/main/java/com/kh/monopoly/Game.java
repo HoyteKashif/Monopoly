@@ -4,14 +4,13 @@ import static java.lang.System.exit;
 import static java.lang.System.out;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Scanner;
+import java.util.Objects;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
+import org.apache.log4j.Logger;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.kh.monopoly.board.space.FreeParking;
 import com.kh.monopoly.board.space.Go;
@@ -20,7 +19,6 @@ import com.kh.monopoly.board.space.Jail;
 import com.kh.monopoly.board.space.Tax;
 import com.kh.monopoly.board.space.chance.Chance;
 import com.kh.monopoly.board.space.chance.ChanceCard;
-import com.kh.monopoly.board.space.chance.Deck;
 import com.kh.monopoly.board.space.communitychest.CommunityChest;
 import com.kh.monopoly.board.space.property.IProperty;
 import com.kh.monopoly.board.space.property.RailRoad;
@@ -30,17 +28,23 @@ import com.kh.monopoly.board.space.property.deed.IDeed;
 import com.kh.monopoly.board.space.property.deed.RailRoadDeed;
 import com.kh.monopoly.board.space.property.deed.StreetDeed;
 import com.kh.monopoly.board.space.property.deed.UtilityDeed;
+import com.kh.monopoly.input.Keyboard;
+import com.kh.monopoly.player.Player;
+import com.kh.monopoly.player.PlayerQueue;
 
 public class Game {
 
-	// https://stackoverflow.com/questions/30249324/how-to-get-java-to-wait-for-user-input/30249614
-	private Scanner in = new Scanner(System.in);
+	static final Logger logger = Logger.getLogger(Game.class);
+
+//	private Scanner in = new Scanner(System.in);
+
+	public Keyboard keyboard = new Keyboard();
 
 	public final PlayerQueue playerQueue;
 
 	int double_count = 0;
 
-	Deck chanceCardDeck;
+//	public Deck chanceCardDeck;
 
 	static {
 		try {
@@ -54,19 +58,19 @@ public class Game {
 
 				if (type.equals("property")) {
 					IDeed deed = JsonParser.newStreetDeed(node);
-					Bank.deeds[idx] = deed;
-					Board.board[idx] = new Street((StreetDeed) deed);
+					Bank.insertDeed(idx, deed);
+					Board.insertSpace(idx, new Street((StreetDeed) deed));
 				}
 
 				if (type.equals("railroad")) {
 					IDeed deed = JsonParser.newRailroadDeed(node);
-					Bank.deeds[idx] = deed;
-					Board.board[idx] = new RailRoad((RailRoadDeed) deed);
+					Bank.insertDeed(idx, deed);
+					Board.insertSpace(idx, new RailRoad((RailRoadDeed) deed));
 				}
 
 				if (type.equals("utility")) {
 					IDeed deed = JsonParser.newUtilityDeed(node);
-					Bank.deeds[idx] = deed;
+					Bank.insertDeed(idx, deed);
 					Board.board[idx] = new Utility((UtilityDeed) deed);
 				}
 
@@ -104,28 +108,46 @@ public class Game {
 			Board.initColorGrouping();
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 	}
 
-	Game() {
+	private Game() {
 		this.playerQueue = new PlayerQueue();
 	}
 
+	static final Game instance = new Game();
+
+	public static Game getInstance() {
+		return instance;
+	}
+
+//	public Deck getChanceDeck() {
+//		return chanceCardDeck;
+//	}
+
+	public int getDoubleCount() {
+		return double_count;
+	}
+
+	public void incrementDoubleCount() {
+		logger.info("Increment Double Count");
+		double_count++;
+	}
+
 	public void add(Player player) {
+		logger.info("Add " + player);
 		playerQueue.addNode(player);
 	}
 
-	public void start() throws JsonParseException, JsonMappingException, IOException {
+	public void start() {
+		logger.info("start new game");
 
 		// queue up the first player
 		playerQueue.advance();
 
-		chanceCardDeck = new Deck(this);
+		// chanceCardDeck = new Deck(this);
 
-		Bank.purchase(getCurrentPlayer(), 2);
-		Bank.purchase(getCurrentPlayer(), 4);
-		
 		// game loop
 		while (playing())
 			;
@@ -133,238 +155,235 @@ public class Game {
 		quit();
 	}
 
-	Player getCurrentPlayer() {
-		return playerQueue.currentPlayer.value;
+	public Player getCurrentPlayer() {
+		return playerQueue.getPlayer();
 	}
 
-	boolean currentPlayerOnChance() {
+	public boolean currentPlayerOnChance() {
 		return Board.isChance(getCurrentPlayer().getPosition());
 	}
 
-	public void quit() {
+//	public Sca
 
-		if (in != null) {
-			in.close();
-			in = null;
+//	public String getInput() {
+//		Keyboard keyboard = new Keyboard();
+//		String input;
+//		do {
+//			
+//			input = keyboard.in.nextLine();
+//		} while (input == null || input.isEmpty());
+//		input = input.trim();
+//		logger.info("user input (" + input + ")");
+//		return input;
+//	}
+
+	public enum UserAction {
+		pass(1, "pass"), show_user_info(2, "my info"), show_help(3, "help"), quit_game(4, "quit"), roll(5, "roll"),
+		execute_property_sale(6, "buy property"), execute_house_sale(7, "buy house"),
+		execute_hotel_sale(8, "buy hotel");
+
+		final String description;
+		final int actionID;
+
+		UserAction(int actionID, String description) {
+			this.actionID = actionID;
+			this.description = description;
 		}
 
-		out.println("Thanks for playing!");
-		exit(0);
+		static UserAction findByID(int i) {
+			for (UserAction eAction : values()) {
+				if (i == eAction.actionID) {
+					return eAction;
+				}
+			}
+			return null;
+		}
+
+		static UserAction findByDescription(String description) {
+			for (UserAction eAction : values()) {
+				if (description.equals(eAction.description)) {
+					return eAction;
+				}
+			}
+			return null;
+		}
+
+	}
+
+	public boolean sendPlayerToJail() {
+		return Board.isGoToJail(getCurrentPlayer().getPosition());
+	}
+
+	public int getOption(String input) {
+		if (input.equals("pass")) {
+			return 1;
+		}
+
+		if (input.equals("my info")) {
+			return 2;
+		}
+
+		if (input.equals("help")) {
+			return 3;
+		}
+
+		if (input.equals("quit")) {
+			return 4;
+		}
+
+		if (input.equals("roll")) {
+			return 5;
+		}
+
+		if (input.equals("buy property")) {
+			return 6;
+		}
+
+		if (input.equals("buy house")) {
+			return 7;
+		}
+
+		if (input.equals("buy hotel")) {
+			return 8;
+		}
+
+		if (isNumeric(input)) {
+			return Integer.parseInt(input);
+		}
+
+		return loop_prompt_option;
+	}
+
+	public static boolean isNumeric(String str) {
+		try {
+			Integer.parseInt(str);
+			return true;
+		} catch (NumberFormatException e) {
+		}
+		return false;
+	}
+
+	public static final int loop_prompt_option = 0;
+
+	/**
+	 * Reset the count of how many doubles have been rolled back to 0
+	 */
+	public void resetDoubleCounter() {
+		double_count = 0;
+	}
+
+	public void performAction(int action) {
+
+		if (action == 1) {
+			resetDoubleCounter();
+			playerQueue.advance();
+		}
+
+		if (action == 2) {
+			printPlayerInfo();
+		}
+
+		if (action == 3) {
+			printMenu(0);
+		}
+
+		if (action == 4) {
+			quit();
+		}
+
+		if (action == 5) {
+			performRoll();
+		}
+
+		if (action == 6) {
+			performPropertySale();
+		}
+
+		if (action == 7) {
+			performHouseSale();
+		}
+
+		if (action == 8) {
+		}
+
 	}
 
 	// - single player loops playing non-stop, until they pass the dice
 	public boolean playing() {
-		System.out.println("your move?");
+
+		String input = null;
+		int option = loop_prompt_option;
+		String prompt = "M E N U\n";
+		prompt += "=============\n";
+		prompt += "1. pass\n";
+		prompt += "2. my info\n";
+		prompt += "3. help\n";
+		prompt += "4. quit\n";
+		prompt += "5. roll\n";
+		prompt += "6. buy property\n";
+		prompt += "7. buy House\n";
+		prompt += "8. buy Hotel\n";
+		prompt += "=============\n";
+		prompt += "Enter choice: ";
+
+		do {
+			input = keyboard.readLine(prompt, "Error - Invalid Input");
+		} while ((option = getOption(input)) == loop_prompt_option);
 
 		boolean ret = false;
 		try {
 
-			String input = null;
-			while (input == null || input.isEmpty()) {
-				input = in.nextLine();
-			}
-
-			input = input.trim();
-
-			if (input.isEmpty()) {
-				ret = true;
-			}
-
 			// allows for easy player position testing
-			try {
-				int i = Integer.parseInt(input);
-				System.out.println("[" + i + "]");
-				getCurrentPlayer().setPosition(Integer.parseInt(input));
-				ret = true;
-			} catch (NumberFormatException e) {
-			}
+//			try {
+//				int i = Integer.parseInt(input);
+//				print("[" + i + "]");
+//				getCurrentPlayer().setPosition(Integer.parseInt(input));
+//				ret = true;
+//			} catch (NumberFormatException e) {
+//			}
 
-			if (input.equals("pass")) {
+			// roll
+			if (option == 1) {
 				// reset the double count for the next user
 				double_count = 0;
 				playerQueue.advance();
 				ret = true;
 			}
 
-			if (input.equals("my info")) {
-				out.println("Current location: " + Board.toString(getCurrentPlayer().getPosition()));
-				out.println("Bank Balance: $" + getCurrentPlayer().getCashBalance());
-				out.print("Owned Properties: [");
-				List<String> properties = new ArrayList<>();
-				for (IDeed deed : getCurrentPlayer().deeds) {
-					if (deed instanceof StreetDeed) {
-						StreetDeed streetDeed = (StreetDeed) deed;
-						properties.add(streetDeed.name() + "(" + streetDeed.colorGroup() + ")");
-					}
-				}
-				out.print(String.join(", ", properties));
-				out.println("]");
-
+			// my info
+			if (option == 2) {
+				printPlayerInfo();
 				ret = true;
 			}
 
-			if (input.equals("help")) {
-				out.println("options: buy, my info, pass, roll and quit");
+			// help
+			if (option == 3) {
+				printMenu(0);
 				ret = true;
 			}
 
-			if (input.equals("quit")) {
+			// quit
+			if (option == 4) {
+				quit();
 				ret = false;
 			}
 
-			if (input.equals("roll")) {
-
-				// move the player
-				int[] roll = Dice.roll();
-				if (roll[0] == roll[1]) {
-					double_count++;
-				}
-				int sum = roll[0] + roll[1];
-				getCurrentPlayer().move(sum);
-
-				// check whether the player landed on chance
-				if (currentPlayerOnChance()) {
-					System.out.println("landed on chance");
-
-					// take a card from the deck
-					ChanceCard chanceCard = chanceCardDeck.getNext();
-					System.out.println("Chance: " + chanceCard.getDescription());
-
-					// run the action
-					chanceCard.action(getCurrentPlayer());
-
-				}
-
-				// handle if they landed on tax space
-				if (Board.isTax(getCurrentPlayer().getPosition())) {
-					Tax tax = Board.getTax(getCurrentPlayer().getPosition());
-					System.out.println("landed on " + tax.name());
-
-					do {
-						// ask the user which option to go with either percentage or dollar
-						if (tax.hasPercentOption()) {
-							out.println("You have two options pay $" + tax.getAmountInDollar() + " or pay "
-									+ tax.getAmountInPercent()
-									+ "% of your total worth in cash, properties and buildings.");
-							out.println("Bank Balance: $" + getCurrentPlayer().getCashBalance());
-							out.println("type d for dollar or p for percent: ");
-							input = in.nextLine();
-						} else {
-							out.println("You have to pay $" + tax.getAmountInDollar());
-							input = "d";
-						}
-
-						if (input.equals("d")) {
-							out.println("applying " + tax.name());
-							getCurrentPlayer().subtractCash(BigDecimal.valueOf(tax.getAmountInDollar()));
-							out.println("Bank Balance: $" + getCurrentPlayer().getCashBalance());
-							break;
-						} else if (input.equals("p")) {
-							out.println("applying " + tax.name());
-
-							BigDecimal taxOwed = getCurrentPlayer().getTotalWorth().multiply(tax.getAmountInPercent());
-
-							getCurrentPlayer().subtractCash(taxOwed);
-							out.println("Bank Balance: $" + getCurrentPlayer().getCashBalance());
-							break;
-						}
-
-					} while (true);
-				}
-
+			// roll
+			if (option == 5) {
+				performRoll();
 				ret = true;
-
-				out.println("new location " + Board.getLocationName(getCurrentPlayer().getPosition()));
 			}
 
-			if (input.equals("buy property")) {
-
-				int location = getCurrentPlayer().getPosition();
-
-				if (Board.isProperty(location)) {
-					IProperty property = Board.getProperty(location);
-
-					out.println(property.name() + " cost $" + property.deed().price());
-
-					out.print("do you want to purchase " + property.deed().name() + "? ");
-					input = in.nextLine();
-
-					if (input.equals("y") || input.equals("yes")) {
-						if (Bank.purchase(getCurrentPlayer(), location))
-							out.println("purchase was successful!");
-						else
-							out.println("purchase was unsuccessful!");
-					} else {
-						out.println("answer=(" + input + ")");
-					}
-
-				} else {
-					out.println(Board.getLocationName(location) + " cannot be purchased");
-				}
+			// buy property
+			if (option == 6) {
+				performPropertySale();
 				ret = true;
-
 			}
 
-			/**
-			 * The game has only 32 houses and 12 hotels. When the buildings have been
-			 * purchased and are in use in the game, the rules say that no more houses and
-			 * hotels can be bought. This building moratorium can end if a player goes
-			 * bankrupt and return houses and hotels to the bank, chooses to sell them back
-			 * to the bank, or buys a hotel an returns the houses on the property to the
-			 * bank. <br>
-			 * <br>
-			 * Once the bank has these returned houses and hotels, they are available to be
-			 * bought by any player for their original price. A bidding war can ensue if
-			 * more than one player wants them, with the buildings going to the highest
-			 * bidder.
-			 */
-
-			/**
-			 * For instance, you can only buy houses on the yellow color group—Atlantic
-			 * Avenue, Ventnor Avenue, and Marvin Gardens—when you own all three properties
-			 * and none is mortgaged<br>
-			 * <br>
-			 * A key rule is that you must place houses evenly on your property. If you buy
-			 * one house and put it on one property, the next house you buy for that group
-			 * must go on another property, and so on. If you buy three houses at once for a
-			 * color group with three properties, you must put one house on each of the
-			 * three properties rather than, say, three houses on one property.
-			 */
-			boolean run = true;
-			if (run || input.equals("buy house")) {
-
-				List<StreetDeed> properties = getCurrentPlayer().getProperties();
-				if (!properties.isEmpty()) {
-					do {
-						// find properties with all the properties in a group already purchased
-						List<Entry<String, List<Street>>> eligibleGroups = new ArrayList<>();
-						for (Entry<String, List<Street>> entry : getCurrentPlayer().getGroupedProperties().entrySet()) {
-							if (entry.getValue().size() == Board.streetColorGroups.get(entry.getKey()).size()) {
-								eligibleGroups.add(entry);
-							}
-						}
-
-						if (eligibleGroups.isEmpty())
-							break;
-
-						// list the properties available for the upgrade
-						out.println("eligible properties [");
-						for (Entry<String, List<Street>> entry : eligibleGroups) {
-							int len = entry.getValue().size();
-							for (int i = 0; i < len; i++) {
-								out.print(entry.getValue().get(i));
-								if (i + 1 < len) {
-									out.print(", ");
-								}
-							}
-							out.println();
-						}
-						out.println("]");
-
-						break;
-					} while (true);
-				}
-
+			// buy house
+			if (option == 7) {
+				performHouseSale();
+				ret = true;
 			}
 
 			/**
@@ -375,8 +394,9 @@ public class Game {
 			 * You can buy hotels one at a time and leave houses on the other properties in
 			 * the color group. Only one hotel can be bought for each property.
 			 */
-			if (input.equals("buy hotel")) {
-
+			// buy hotel
+			if (option == 8) {
+				ret = true;
 			}
 
 			// must be last action
@@ -385,10 +405,159 @@ public class Game {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace(System.err);
+			logger.error(e.getMessage(), e);
 			quit();
 		}
 		return ret;
 	}
 
+	private void printMenu(int menu) {
+		if (menu == 0)
+			print("menu: buy, my info, pass, roll and quit");
+	}
+
+	private void printPlayerInfo() {
+		print("Current location: " + Board.toString(getCurrentPlayer().getPosition()));
+		print("Bank Balance: $" + getCurrentPlayer().getCashBalance());
+
+		List<StreetDeed> lstOwnedProperties = getCurrentPlayer().getProperties();
+		String[] properties = new String[lstOwnedProperties.size()];
+		for (int i = 0; i < properties.length; i++) {
+			StreetDeed deed = lstOwnedProperties.get(i);
+			properties[i] = deed.name() + "(" + deed.colorGroup() + ")";
+		}
+		print("Owned Properties: [" + String.join(", ", properties) + "]");
+	}
+
+	private void performRoll() {
+
+		// move the player
+		int[] roll = Dice.roll();
+		if (roll[0] == roll[1]) {
+			incrementDoubleCount();
+		}
+		int sum = roll[0] + roll[1];
+		getCurrentPlayer().move(sum);
+
+		// check whether the player landed on chance
+		if (currentPlayerOnChance()) {
+
+			// take a card from the deck
+			ChanceCard chanceCard = Chance.getNext();
+			print("Landed on Chance: " + chanceCard.getDescription());
+
+			// run the action
+			chanceCard.action(getCurrentPlayer());
+
+		}
+		// handle if they landed on tax space
+		else if (Board.isTax(getCurrentPlayer().getPosition())) {
+
+			Tax tax = Board.getTax(getCurrentPlayer().getPosition());
+			print("Landed on " + tax);
+
+			tax.applyTo(getCurrentPlayer());
+		} else {
+			print("Landed on " + Board.getLocationName(getCurrentPlayer().getPosition()));
+		}
+	}
+
+	private void print(Object obj) {
+		out.println(Objects.toString(obj));
+	}
+
+//	private String promptForInput(Object obj) {
+//		out.print(String.valueOf(obj));
+//		return getInput();
+//	}
+
+	private void performPropertySale() {
+
+		int location = getCurrentPlayer().getPosition();
+
+		if (Board.isProperty(location)) {
+			IProperty property = Board.getProperty(location);
+			print(property);
+
+			String input = keyboard.readLine("do you want to purchase " + property.deed().name() + "? ",
+					"Error - Invalid Input.");
+
+			if (input.equals("y") || input.equals("yes")) {
+				if (Bank.purchase(getCurrentPlayer(), location))
+					print("purchase was successful!");
+				else
+					print("purchase was unsuccessful!");
+			} else {
+				print("answer=(" + input + ")");
+			}
+
+		} else {
+			print(Board.getLocationName(location) + " cannot be purchased");
+		}
+	}
+
+	/**
+	 * The game has only 32 houses and 12 hotels. When the buildings have been
+	 * purchased and are in use in the game, the rules say that no more houses and
+	 * hotels can be bought. This building moratorium can end if a player goes
+	 * bankrupt and return houses and hotels to the bank, chooses to sell them back
+	 * to the bank, or buys a hotel an returns the houses on the property to the
+	 * bank. <br>
+	 * <br>
+	 * Once the bank has these returned houses and hotels, they are available to be
+	 * bought by any player for their original price. A bidding war can ensue if
+	 * more than one player wants them, with the buildings going to the highest
+	 * bidder.
+	 */
+
+	/**
+	 * For instance, you can only buy houses on the yellow color group—Atlantic
+	 * Avenue, Ventnor Avenue, and Marvin Gardens—when you own all three properties
+	 * and none is mortgaged<br>
+	 * <br>
+	 * A key rule is that you must place houses evenly on your property. If you buy
+	 * one house and put it on one property, the next house you buy for that group
+	 * must go on another property, and so on. If you buy three houses at once for a
+	 * color group with three properties, you must put one house on each of the
+	 * three properties rather than, say, three houses on one property.
+	 */
+	private void performHouseSale() {
+
+		List<StreetDeed> properties = getCurrentPlayer().getProperties();
+		if (!properties.isEmpty()) {
+			do {
+				// find properties with all the properties in a group already purchased
+				List<Entry<String, List<Street>>> eligibleGroups = new ArrayList<>();
+				for (Entry<String, List<Street>> entry : getCurrentPlayer().getGroupedProperties().entrySet()) {
+					if (entry.getValue().size() == Board.streetColorGroups.get(entry.getKey()).size()) {
+						eligibleGroups.add(entry);
+					}
+				}
+
+				if (eligibleGroups.isEmpty())
+					break;
+
+				// list the properties available for the upgrade
+				print("eligible properties [");
+				for (Entry<String, List<Street>> entry : eligibleGroups) {
+					int len = entry.getValue().size();
+					String[] a = new String[len];
+					for (int i = 0; i < len; i++) {
+						a[i] = String.valueOf(entry.getValue().get(i));
+					}
+					print(String.join(", ", a));
+				}
+				print("]");
+
+				break;
+			} while (true);
+		}
+
+	}
+
+	private void quit() {
+		logger.info("quit");
+		print("Goodbye!");
+		exit(0);
+	}
 }

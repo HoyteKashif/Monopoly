@@ -1,6 +1,6 @@
 package com.kh.monopoly.board.space.property.deed;
 
-public class UtilityDeed extends Deed {
+public class UtilityDeed extends Deed implements Purchasable {
 	final int oneOwned;
 	final int twoOwned;
 

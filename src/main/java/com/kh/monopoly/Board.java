@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import com.kh.monopoly.board.space.GoToJail;
 import com.kh.monopoly.board.space.ISpace;
 import com.kh.monopoly.board.space.Tax;
@@ -14,6 +16,7 @@ import com.kh.monopoly.board.space.property.RailRoad;
 import com.kh.monopoly.board.space.property.Street;
 import com.kh.monopoly.board.space.property.Utility;
 import com.kh.monopoly.board.space.property.deed.StreetDeed;
+import com.kh.monopoly.player.Player;
 
 public class Board {
 	public static final Object[] board = new Object[40];
@@ -23,6 +26,8 @@ public class Board {
 	public static final int[] COMMUNITY_CHEST = { 2, 17, 33 };
 
 	public static final int[] CHANCE = { 7, 22, 36 };
+
+	public static final Logger logger = Logger.getLogger(Board.class);
 
 	/**
 	 * used an array of type integer because using a final integer is not valid
@@ -34,6 +39,11 @@ public class Board {
 	// just
 	// be read by me
 	public static final int[] JAIL = new int[1];
+
+	public static void insertSpace(int index, ISpace space) {
+		logger.info("insert  " + space + " at position " + index);
+		Board.board[index] = space;
+	}
 
 	public static void initColorGrouping() {
 		for (int i = 0; i < board.length; i++) {

@@ -1,10 +1,10 @@
-package com.kh.monopoly;
+package com.kh.monopoly.player;
 
 import java.util.function.Consumer;
 
 public class PlayerQueue {
 
-	public Node currentPlayer = null;
+	private Node currentPlayer = null;
 
 	private Node head = null;
 	private Node tail = null;
@@ -17,6 +17,13 @@ public class PlayerQueue {
 		Node(Player value) {
 			this.value = value;
 		}
+	}
+
+	public PlayerQueue() {
+	}
+
+	public Player getPlayer() {
+		return currentPlayer != null ? currentPlayer.value : null;
 	}
 
 	// change the current player to the next available player
@@ -139,7 +146,7 @@ public class PlayerQueue {
 		if (head != null) {
 			do {
 				Player p = currentNode.value;
-				if (p.deeds[location] != null) {
+				if (p.getDeeds()[location] != null) {
 					return p;
 				}
 			} while (currentNode != head);

@@ -1,6 +1,6 @@
 package com.kh.monopoly.board.space.property.deed;
 
-public class StreetDeed extends ITitleDeed {
+public class StreetDeed extends ITitleDeed implements Purchasable {
 	final String color_group;
 	final int rentWith1House;
 	final int rentWith2Houses;
