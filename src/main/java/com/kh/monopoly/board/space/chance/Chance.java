@@ -159,6 +159,7 @@ public class Chance extends Space {
 			}
 
 		};
+		// FIXME Not Implemented
 		deck[9] = new ChanceCard(
 				"Make general repairs on all your property: For each house pay $25, For each hotel pay $100.") {
 			@Override
@@ -175,15 +176,19 @@ public class Chance extends Space {
 			@Override
 			public void action(Player player) {
 				logger.info(this);
-				// Pay poor tax of $15
 				player.subtractCash(15);
 			}
 		};
+
+		/**
+		 * Take a trip to the Reading RailRoad. Advance token if you pass Go, collect
+		 * $200.
+		 * 
+		 */
 		deck[11] = new ChanceCard("Take a trip to Reading Railroad.") {
 			@Override
 			public void action(Player player) {
 				logger.info(this);
-				// Advance token if you pass Go, collect $200.
 				boolean foundRailRoad = false;
 				do {
 					player.move(1);
@@ -194,11 +199,13 @@ public class Chance extends Space {
 				} while (!foundRailRoad);
 			}
 		};
+		/**
+		 * Take a walk on the the Boardwalk. Advance token to Boardwalk.
+		 */
 		deck[12] = new ChanceCard("Take a walk on the Boardwalk. Advance token to Boardwalk.") {
 			@Override
 			public void action(Player player) {
 				logger.info(this);
-				// Take a walk on the Boardwalk. Advance token to Boardwalk.
 				boolean foundBoardwalk = false;
 				do {
 					player.move(1);

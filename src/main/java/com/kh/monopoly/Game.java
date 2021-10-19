@@ -29,6 +29,8 @@ import com.kh.monopoly.board.space.property.deed.RailRoadDeed;
 import com.kh.monopoly.board.space.property.deed.StreetDeed;
 import com.kh.monopoly.board.space.property.deed.UtilityDeed;
 import com.kh.monopoly.input.Keyboard;
+import com.kh.monopoly.menu.MenuFactory;
+import com.kh.monopoly.menu.TextMenu;
 import com.kh.monopoly.player.Player;
 import com.kh.monopoly.player.PlayerQueue;
 
@@ -162,20 +164,6 @@ public class Game {
 	public boolean currentPlayerOnChance() {
 		return Board.isChance(getCurrentPlayer().getPosition());
 	}
-
-//	public Sca
-
-//	public String getInput() {
-//		Keyboard keyboard = new Keyboard();
-//		String input;
-//		do {
-//			
-//			input = keyboard.in.nextLine();
-//		} while (input == null || input.isEmpty());
-//		input = input.trim();
-//		logger.info("user input (" + input + ")");
-//		return input;
-//	}
 
 	public enum UserAction {
 		pass(1, "pass"), show_user_info(2, "my info"), show_help(3, "help"), quit_game(4, "quit"), roll(5, "roll"),
@@ -313,34 +301,28 @@ public class Game {
 
 		String input = null;
 		int option = loop_prompt_option;
-		String prompt = "M E N U\n";
-		prompt += "=============\n";
-		prompt += "1. pass\n";
-		prompt += "2. my info\n";
-		prompt += "3. help\n";
-		prompt += "4. quit\n";
-		prompt += "5. roll\n";
-		prompt += "6. buy property\n";
-		prompt += "7. buy House\n";
-		prompt += "8. buy Hotel\n";
-		prompt += "=============\n";
-		prompt += "Enter choice: ";
-
-		do {
-			input = keyboard.readLine(prompt, "Error - Invalid Input");
-		} while ((option = getOption(input)) == loop_prompt_option);
+//		String prompt = "M E N U\n";
+//		prompt += "=============\n";
+//		prompt += "1. pass\n";
+//		prompt += "2. my info\n";
+//		prompt += "3. help\n";
+//		prompt += "4. quit\n";
+//		prompt += "5. roll\n";
+//		prompt += "6. buy property\n";
+//		prompt += "7. buy House\n";
+//		prompt += "8. buy Hotel\n";
+//		prompt += "=============\n";
+//		prompt += "Enter choice: ";
+		
+		TextMenu mainMenu = MenuFactory.getMainMenu();
+		mainMenu.run();
+		
+//		do {
+//			input = keyboard.readLine(prompt, "Error - Invalid Input");
+//		} while ((option = getOption(input)) == loop_prompt_option);
 
 		boolean ret = false;
 		try {
-
-			// allows for easy player position testing
-//			try {
-//				int i = Integer.parseInt(input);
-//				print("[" + i + "]");
-//				getCurrentPlayer().setPosition(Integer.parseInt(input));
-//				ret = true;
-//			} catch (NumberFormatException e) {
-//			}
 
 			// roll
 			if (option == 1) {
@@ -462,14 +444,9 @@ public class Game {
 		}
 	}
 
-	private void print(Object obj) {
+	public void print(Object obj) {
 		out.println(Objects.toString(obj));
 	}
-
-//	private String promptForInput(Object obj) {
-//		out.print(String.valueOf(obj));
-//		return getInput();
-//	}
 
 	private void performPropertySale() {
 
@@ -479,14 +456,14 @@ public class Game {
 			IProperty property = Board.getProperty(location);
 			print(property);
 
-			String input = keyboard.readLine("do you want to purchase " + property.deed().name() + "? ",
+			String input = keyboard.readLine("Do you want to purchase " + property.deed().name() + "? ",
 					"Error - Invalid Input.");
 
 			if (input.equals("y") || input.equals("yes")) {
 				if (Bank.purchase(getCurrentPlayer(), location))
-					print("purchase was successful!");
+					print("Purchase was successful!");
 				else
-					print("purchase was unsuccessful!");
+					print("Purchase was unsuccessful!");
 			} else {
 				print("answer=(" + input + ")");
 			}
@@ -538,7 +515,7 @@ public class Game {
 					break;
 
 				// list the properties available for the upgrade
-				print("eligible properties [");
+				print("Eligible properties [");
 				for (Entry<String, List<Street>> entry : eligibleGroups) {
 					int len = entry.getValue().size();
 					String[] a = new String[len];

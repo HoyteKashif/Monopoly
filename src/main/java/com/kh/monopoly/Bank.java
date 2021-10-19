@@ -33,7 +33,7 @@ public class Bank {
 		Bank.deeds[index] = deed;
 	}
 
-	static boolean purchase(Player player, int location) {
+	public static boolean purchase(Player player, int location) {
 		logger.info("purchase location=" + location + " by " + player);
 
 		IDeed deed = deeds[location];

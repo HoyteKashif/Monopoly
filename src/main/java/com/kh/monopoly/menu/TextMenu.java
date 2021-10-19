@@ -40,12 +40,14 @@ public class TextMenu extends TextMenuItem {
 	}
 
 	private void display() {
-		int option = 0;
-		System.out.println(getTitle() + ":");
-		for (TextMenuItem item : items) {
-			System.out.println((option++) + ": " + item.getTitle());
+		System.out.println(getTitle());
+		System.out.println("==========");
+		for (int option = 0; option < items.size(); option++) {
+			TextMenuItem item = items.get(option);
+			System.out.println((option + 1) + ": " + item.getTitle());
 		}
-		System.out.print("select option: ");
+		System.out.println("==========");
+		System.out.print("Select option: ");
 		System.out.flush();
 	}
 
@@ -56,8 +58,8 @@ public class TextMenu extends TextMenuItem {
 			String line = br.readLine();
 			try {
 				int option = Integer.parseInt(line);
-				if (option > 0 && option < items.size())
-					return items.get(option);
+				if (option > 0 && option <= items.size())
+					return items.get(option - 1);
 			} catch (NumberFormatException e) {
 			}
 
