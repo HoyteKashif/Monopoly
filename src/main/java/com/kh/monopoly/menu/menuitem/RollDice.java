@@ -3,12 +3,13 @@ package com.kh.monopoly.menu.menuitem;
 import com.kh.monopoly.Board;
 import com.kh.monopoly.Dice;
 import com.kh.monopoly.Game;
+import com.kh.monopoly.board.space.GoToJail;
 import com.kh.monopoly.board.space.Tax;
 import com.kh.monopoly.board.space.chance.Chance;
 import com.kh.monopoly.board.space.chance.ChanceCard;
 import com.kh.monopoly.player.Player;
 
-public class Roll implements Runnable {
+public class RollDice implements Runnable {
 
 	@Override
 	public void run() {
@@ -25,7 +26,7 @@ public class Roll implements Runnable {
 		curPlayer.move(sum);
 
 		// check whether the player landed on chance
-		if (game.currentPlayerOnChance()) {
+		if (curPlayer.landedOn(Chance.class)) {
 
 			// take a card from the deck
 			ChanceCard chanceCard = Chance.getNext();
@@ -36,7 +37,7 @@ public class Roll implements Runnable {
 
 		}
 		// handle if they landed on tax space
-		else if (Board.isTax(curPlayer.getPosition())) {
+		else if (curPlayer.landedOn(Tax.class)) {
 
 			Tax tax = Board.getTax(curPlayer.getPosition());
 			game.print("Landed on " + tax);
@@ -44,6 +45,11 @@ public class Roll implements Runnable {
 			tax.applyTo(curPlayer);
 		} else {
 			game.print("Landed on " + Board.getLocationName(curPlayer.getPosition()));
+		}
+
+		// must be last action
+		if (curPlayer.landedOn(GoToJail.class)) {
+			curPlayer.goToJail();
 		}
 	}
 

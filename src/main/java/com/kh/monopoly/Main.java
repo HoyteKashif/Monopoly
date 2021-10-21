@@ -10,9 +10,12 @@ public class Main {
 
 		PropertyConfigurator.configure("properties/log4j.properties");
 
-		Game.instance.add(new Player("kashif"));
-		Game.instance.add(new Player("damali"));
-		Game.instance.start();
+		Game game = Game.getInstance();
+
+		game.add(new Player("kashif"));
+		game.add(new Player("damali"));
+
+		game.start();
 	}
 
 }

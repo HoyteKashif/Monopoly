@@ -7,7 +7,7 @@ import com.kh.monopoly.board.space.property.IProperty;
 import com.kh.monopoly.input.Keyboard;
 import com.kh.monopoly.player.Player;
 
-public class PropertySale implements Runnable {
+public class SellProperty implements Runnable {
 
 	@Override
 	public void run() {

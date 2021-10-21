@@ -16,9 +16,7 @@ import com.kh.monopoly.board.space.FreeParking;
 import com.kh.monopoly.board.space.Go;
 import com.kh.monopoly.board.space.GoToJail;
 import com.kh.monopoly.board.space.Jail;
-import com.kh.monopoly.board.space.Tax;
 import com.kh.monopoly.board.space.chance.Chance;
-import com.kh.monopoly.board.space.chance.ChanceCard;
 import com.kh.monopoly.board.space.communitychest.CommunityChest;
 import com.kh.monopoly.board.space.property.IProperty;
 import com.kh.monopoly.board.space.property.RailRoad;
@@ -42,7 +40,7 @@ public class Game {
 
 	public Keyboard keyboard = new Keyboard();
 
-	public final PlayerQueue playerQueue;
+	private final PlayerQueue playerQueue;
 
 	int double_count = 0;
 
@@ -118,15 +116,19 @@ public class Game {
 		this.playerQueue = new PlayerQueue();
 	}
 
-	static final Game instance = new Game();
+	private static Game instance;
 
 	public static Game getInstance() {
+
+		if (instance == null)
+			instance = new Game();
+
 		return instance;
 	}
 
-//	public Deck getChanceDeck() {
-//		return chanceCardDeck;
-//	}
+	public PlayerQueue getPlayerQueue() {
+		return playerQueue;
+	}
 
 	public int getDoubleCount() {
 		return double_count;
@@ -150,9 +152,12 @@ public class Game {
 
 		// chanceCardDeck = new Deck(this);
 
+		TextMenu mainMenu = MenuFactory.getMainMenu();
+		mainMenu.run();
+
 		// game loop
-		while (playing())
-			;
+//		while (playing())
+//			;
 
 		quit();
 	}
@@ -161,9 +166,9 @@ public class Game {
 		return playerQueue.getPlayer();
 	}
 
-	public boolean currentPlayerOnChance() {
-		return Board.isChance(getCurrentPlayer().getPosition());
-	}
+//	public boolean currentPlayerOnChance() {
+//		return Board.isChance(getCurrentPlayer().getPosition());
+//	}
 
 	public enum UserAction {
 		pass(1, "pass"), show_user_info(2, "my info"), show_help(3, "help"), quit_game(4, "quit"), roll(5, "roll"),
@@ -198,49 +203,49 @@ public class Game {
 
 	}
 
-	public boolean sendPlayerToJail() {
-		return Board.isGoToJail(getCurrentPlayer().getPosition());
-	}
+//	public boolean sendPlayerToJail() {
+//		return Board.isGoToJail(getCurrentPlayer().getPosition());
+//	}
 
-	public int getOption(String input) {
-		if (input.equals("pass")) {
-			return 1;
-		}
-
-		if (input.equals("my info")) {
-			return 2;
-		}
-
-		if (input.equals("help")) {
-			return 3;
-		}
-
-		if (input.equals("quit")) {
-			return 4;
-		}
-
-		if (input.equals("roll")) {
-			return 5;
-		}
-
-		if (input.equals("buy property")) {
-			return 6;
-		}
-
-		if (input.equals("buy house")) {
-			return 7;
-		}
-
-		if (input.equals("buy hotel")) {
-			return 8;
-		}
-
-		if (isNumeric(input)) {
-			return Integer.parseInt(input);
-		}
-
-		return loop_prompt_option;
-	}
+//	public int getOption(String input) {
+//		if (input.equals("pass")) {
+//			return 1;
+//		}
+//
+//		if (input.equals("my info")) {
+//			return 2;
+//		}
+//
+//		if (input.equals("help")) {
+//			return 3;
+//		}
+//
+//		if (input.equals("quit")) {
+//			return 4;
+//		}
+//
+//		if (input.equals("roll")) {
+//			return 5;
+//		}
+//
+//		if (input.equals("buy property")) {
+//			return 6;
+//		}
+//
+//		if (input.equals("buy house")) {
+//			return 7;
+//		}
+//
+//		if (input.equals("buy hotel")) {
+//			return 8;
+//		}
+//
+//		if (isNumeric(input)) {
+//			return Integer.parseInt(input);
+//		}
+//
+//		return loop_prompt_option;
+//	}
 
 	public static boolean isNumeric(String str) {
 		try {
@@ -260,42 +265,6 @@ public class Game {
 		double_count = 0;
 	}
 
-	public void performAction(int action) {
-
-		if (action == 1) {
-			resetDoubleCounter();
-			playerQueue.advance();
-		}
-
-		if (action == 2) {
-			printPlayerInfo();
-		}
-
-		if (action == 3) {
-			printMenu(0);
-		}
-
-		if (action == 4) {
-			quit();
-		}
-
-		if (action == 5) {
-			performRoll();
-		}
-
-		if (action == 6) {
-			performPropertySale();
-		}
-
-		if (action == 7) {
-			performHouseSale();
-		}
-
-		if (action == 8) {
-		}
-
-	}
-
 	// - single player loops playing non-stop, until they pass the dice
 	public boolean playing() {
 
@@ -313,10 +282,10 @@ public class Game {
 //		prompt += "8. buy Hotel\n";
 //		prompt += "=============\n";
 //		prompt += "Enter choice: ";
-		
+
 		TextMenu mainMenu = MenuFactory.getMainMenu();
 		mainMenu.run();
-		
+
 //		do {
 //			input = keyboard.readLine(prompt, "Error - Invalid Input");
 //		} while ((option = getOption(input)) == loop_prompt_option);
@@ -324,47 +293,53 @@ public class Game {
 		boolean ret = false;
 		try {
 
-			// roll
+			// Pass Dice
+			// XXX replaced with Runnable
 			if (option == 1) {
 				// reset the double count for the next user
-				double_count = 0;
-				playerQueue.advance();
+				// double_count = 0;
+				// playerQueue.advance();
 				ret = true;
 			}
 
 			// my info
+			// XXX replaced with Runnable
 			if (option == 2) {
-				printPlayerInfo();
+				// printPlayerInfo();
 				ret = true;
 			}
 
 			// help
+			// XXX replaced with Looping of the Menu
 			if (option == 3) {
-				printMenu(0);
+				// printMenu(0);
 				ret = true;
 			}
 
 			// quit
+			// XXX replaced with Runnable
 			if (option == 4) {
-				quit();
+				// quit();
 				ret = false;
 			}
 
 			// roll
+			// XXX replaced with Runnable
 			if (option == 5) {
-				performRoll();
+				// performRoll();
 				ret = true;
 			}
 
 			// buy property
+			// XXX replaced with Runnable
 			if (option == 6) {
-				performPropertySale();
+				// performPropertySale();
 				ret = true;
 			}
 
 			// buy house
 			if (option == 7) {
-				performHouseSale();
+				// performHouseSale();
 				ret = true;
 			}
 
@@ -382,22 +357,28 @@ public class Game {
 			}
 
 			// must be last action
-			if (Board.isGoToJail(getCurrentPlayer().getPosition())) {
-				getCurrentPlayer().setPosition(Board.jail());
-			}
+			// XXX Placed in both the Roll-Runnable and Player
+			// if (Board.isGoToJail(getCurrentPlayer().getPosition())) {
+			// getCurrentPlayer().setPosition(Board.jail());
+			// }
 
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
-			quit();
+			// XXX Replace with Runnable
+			// quit();
 		}
 		return ret;
 	}
 
+	@Deprecated
+	// Use Runnable
 	private void printMenu(int menu) {
 		if (menu == 0)
 			print("menu: buy, my info, pass, roll and quit");
 	}
 
+	@Deprecated
+	// Use Runnable
 	private void printPlayerInfo() {
 		print("Current location: " + Board.toString(getCurrentPlayer().getPosition()));
 		print("Bank Balance: $" + getCurrentPlayer().getCashBalance());
@@ -411,43 +392,14 @@ public class Game {
 		print("Owned Properties: [" + String.join(", ", properties) + "]");
 	}
 
-	private void performRoll() {
-
-		// move the player
-		int[] roll = Dice.roll();
-		if (roll[0] == roll[1]) {
-			incrementDoubleCount();
-		}
-		int sum = roll[0] + roll[1];
-		getCurrentPlayer().move(sum);
-
-		// check whether the player landed on chance
-		if (currentPlayerOnChance()) {
-
-			// take a card from the deck
-			ChanceCard chanceCard = Chance.getNext();
-			print("Landed on Chance: " + chanceCard.getDescription());
-
-			// run the action
-			chanceCard.action(getCurrentPlayer());
-
-		}
-		// handle if they landed on tax space
-		else if (Board.isTax(getCurrentPlayer().getPosition())) {
-
-			Tax tax = Board.getTax(getCurrentPlayer().getPosition());
-			print("Landed on " + tax);
-
-			tax.applyTo(getCurrentPlayer());
-		} else {
-			print("Landed on " + Board.getLocationName(getCurrentPlayer().getPosition()));
-		}
-	}
-
+	// FIXME
+	// This is a static class, no need to do this
 	public void print(Object obj) {
 		out.println(Objects.toString(obj));
 	}
 
+	@Deprecated
+	// Use Runnable
 	private void performPropertySale() {
 
 		int location = getCurrentPlayer().getPosition();
@@ -498,6 +450,8 @@ public class Game {
 	 * color group with three properties, you must put one house on each of the
 	 * three properties rather than, say, three houses on one property.
 	 */
+	@Deprecated
+	// Replaced with Runnable
 	private void performHouseSale() {
 
 		List<StreetDeed> properties = getCurrentPlayer().getProperties();
@@ -532,7 +486,7 @@ public class Game {
 
 	}
 
-	private void quit() {
+	public void quit() {
 		logger.info("quit");
 		print("Goodbye!");
 		exit(0);

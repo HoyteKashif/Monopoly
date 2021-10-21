@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 
 import com.kh.monopoly.Bank;
 import com.kh.monopoly.Board;
+import com.kh.monopoly.board.space.Space;
 import com.kh.monopoly.board.space.property.Street;
 import com.kh.monopoly.board.space.property.deed.IDeed;
 import com.kh.monopoly.board.space.property.deed.StreetDeed;
@@ -34,6 +35,22 @@ public class Player {
 		this.deeds = new IDeed[Bank.deeds.length];
 	}
 
+	public <S extends Space> boolean landedOn(Class<S> spaceType) {
+		return spaceType.isInstance(Board.getSpace(getPosition()));
+	}
+
+//	public boolean landedOnChance() {
+//		return Board.isChance(getPosition());
+//	}
+//
+//	public boolean landedOnGoToJail() {
+//		return Board.isGoToJail(getPosition());
+//	}
+
+	public void goToJail() {
+		setPosition(Board.jail());
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -53,11 +70,21 @@ public class Player {
 	}
 
 	public Map<String, List<Street>> getGroupedProperties() {
+
+		// Initialize the map which will hold the groupings
+		// key = Color Group , value = List of Streets in group
 		Map<String, List<Street>> map = new HashMap<>();
+
+		// Iterate over all owned properties
+		// adding them to the Color Group they are in
 		for (int i = 0; i < getDeeds().length; i++) {
+
+			// Done because the Deeds Array contains null
+			// which is indicates a space on the board that this player does not own
 			if (getDeeds()[i] == null)
 				continue;
 
+			// Filter for only Streets
 			if (Board.isStreet(i)) {
 				Street street = Board.getStreet(i);
 				String colorGroup = ((StreetDeed) street.deed()).colorGroup();
@@ -69,12 +96,11 @@ public class Player {
 					map.put(colorGroup, streets);
 				}
 			}
+
 		}
 		return map;
 	}
 
-	// FIXME
-	// add buildings
 	public BigDecimal getTotalWorth() {
 		BigDecimal totalWorth = BigDecimal.ZERO;
 
@@ -88,7 +114,7 @@ public class Player {
 			}
 		}
 
-		// add worth of buildings
+		// TODO Calculate the collective price of the buildings owned by this player
 
 		return totalWorth;
 	}
@@ -140,24 +166,40 @@ public class Player {
 	private static int move(int valueToMove, int curPosition, int arrLength) {
 		logger.info("move [ValueToMove=" + valueToMove + ";CurrentPosition=" + curPosition + ";ArrayLength=" + arrLength
 				+ "]");
+
+		// Calculated position to move to
 		int ret;
+
+		// Initialize the position to the player's current position plus the number of
+		// spaces to move the player's token
 		ret = curPosition + valueToMove;
 
+		// If the position the player was moved to is less than 0
+		// then wrap the players position and continue doing so until the new position
+		// is greater than 0 but less than the length of the array
+		// This works by continue to subtract the value of the
 		while (ret < 0) {
 			ret = arrLength + ret;
 		}
 
-		return ret % arrLength;
+		// Now that we are certain the position is positive
+		// we can get the modulus the new position modulus
+
+		// Handle the case of the new position being greater than the upper bound (Array
+		// length)
+		ret = ret % arrLength;
+
+		return ret;
+	}
+
+	public IDeed[] getDeeds() {
+		return deeds;
 	}
 
 	@Override
 	public String toString() {
 		return "Player [position=" + position + ", cashBalance=" + cashBalance + ", deeds="
 				+ Arrays.toString(getDeeds()) + ", name=" + name + "]";
-	}
-
-	public IDeed[] getDeeds() {
-		return deeds;
 	}
 
 }

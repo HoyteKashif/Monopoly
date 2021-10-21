@@ -92,7 +92,7 @@ public class Chance extends Space {
 					player.subtractCash(rentOwed);
 
 					// determine the owner
-					Player owner = Game.getInstance().playerQueue.findOwner(player.getPosition());
+					Player owner = Game.getInstance().getPlayerQueue().findOwner(player.getPosition());
 					owner.addCash(rentOwed);
 				}
 			}
@@ -121,7 +121,7 @@ public class Chance extends Space {
 					player.subtractCash(rentOwed);
 
 					// determine the owner
-					Player owner = Game.getInstance().playerQueue.findOwner(player.getPosition());
+					Player owner = Game.getInstance().getPlayerQueue().findOwner(player.getPosition());
 					owner.addCash(rentOwed);
 				}
 			}
@@ -220,8 +220,11 @@ public class Chance extends Space {
 			@Override
 			public void action(Player player) {
 				logger.info(this);
+
+				Game game = Game.getInstance();
+
 				// You have been elected Chairman of the Board. Pay each player $50.
-				Game.getInstance().playerQueue.apply(otherPlayer -> {
+				game.getPlayerQueue().apply(otherPlayer -> {
 					player.subtractCash(50);
 					otherPlayer.addCash(50);
 				});

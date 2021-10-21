@@ -231,6 +231,8 @@ public class Board {
 	 * @param iSpace
 	 * @return
 	 */
+	@Deprecated
+	// Replace with player.landedOn
 	public static boolean isChance(int iSpace) {
 
 		for (int i : CHANCE) {

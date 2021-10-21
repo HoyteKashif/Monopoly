@@ -7,12 +7,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.kh.monopoly.Game;
+
 public class TextMenu extends TextMenuItem {
 
-	private static final TextMenuItem quit = new TextMenuItem("quit", new Runnable() {
+	private static final TextMenuItem quit = new TextMenuItem("Quit", new Runnable() {
 
 		public void run() {
-			System.exit(0);
+			Game.getInstance().quit();
 		}
 	});
 
