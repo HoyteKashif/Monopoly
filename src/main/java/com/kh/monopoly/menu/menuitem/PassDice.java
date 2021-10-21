@@ -7,7 +7,6 @@ public class PassDice implements Runnable {
 	@Override
 	public void run() {
 		Game game = Game.getInstance();
-		game.resetDoubleCounter();
 		game.getPlayerQueue().advance();
 	}
 

@@ -88,10 +88,10 @@ public class Board {
 
 	public static boolean isJail(int i) {
 		requireValidLocation(i);
-		return i == jail();
+		return i == getJailPosition();
 	}
 
-	public static int jail() {
+	public static int getJailPosition() {
 		return JAIL[0];
 	}
 

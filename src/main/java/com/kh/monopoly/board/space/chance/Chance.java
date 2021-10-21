@@ -87,7 +87,7 @@ public class Chance extends Space {
 				// thrown.
 				if (Bank.isOwned(player.getPosition())) {
 
-					int rentOwed = Dice.rollMultipliedBy(10);
+					int rentOwed = Dice.getInstance().rollMultipliedBy(10);
 
 					player.subtractCash(rentOwed);
 
@@ -116,7 +116,7 @@ public class Chance extends Space {
 				// Railroad is unowned, you may buy it from the Bank.
 				if (Bank.isOwned(player.getPosition())) {
 
-					int rentOwed = Dice.rollMultipliedBy(10);
+					int rentOwed = Dice.getInstance().rollMultipliedBy(10);
 
 					player.subtractCash(rentOwed);
 
@@ -134,14 +134,15 @@ public class Chance extends Space {
 				player.addCash(50);
 			}
 		};
+		/**
+		 * Get out of Jail Free. This card may be kept until needed, or traded/sold.
+		 * {This card may be kept until needed or sold/traded. Get Out of Jail Free.}
+		 */
 		deck[6] = new ChanceCard("Get out of Jail Free.") {
 			@Override
 			public void action(Player player) {
 				logger.info(this);
-				// Get out of Jail Free. This card may be kept until needed, or traded/sold.
-				// {This card may be kept until needed or sold/traded. Get Out of Jail
-				// Free.}{The first sentence is much smaller than the second} (Mr. Monopoly, in
-				// close-fitting one-piece prison stripes, is literally kicked out)
+				System.err.println("Unimplemented " + toString());
 			}
 		};
 		deck[7] = new ChanceCard("Go Back Three Spaces.") {
@@ -155,21 +156,21 @@ public class Chance extends Space {
 			@Override
 			public void action(Player player) {
 				logger.info(this);
-				player.setPosition(Board.jail());
+				player.setPosition(Board.getJailPosition());
 			}
 
 		};
 		// FIXME Not Implemented
+		/**
+		 * Make general repairs on all your property: For each house pay $25, For each
+		 * hotel {pay} $100.
+		 */
 		deck[9] = new ChanceCard(
 				"Make general repairs on all your property: For each house pay $25, For each hotel pay $100.") {
 			@Override
 			public void action(Player player) {
 				logger.info(this);
-				// Make general repairs on all your property: For each house pay $25, For each
-				// hotel {pay} $100.(Consulting a "How to Fix It" brochure, a hammer-wielding
-				// Mr. Monopoly sits astride a house not much larger than he is; it buckles
-				// under his weight)
-				System.err.println("Unimplemented Chance Card (Make General repairs on all your property)");
+				System.err.println("Unimplemented " + toString());
 			}
 		};
 		deck[10] = new ChanceCard("Pay poor tax of $15") {

@@ -33,6 +33,9 @@ public class Bank {
 		Bank.deeds[index] = deed;
 	}
 
+	// FIXME
+	// Broken - Situation of player purchasing already owned property is not handled
+	// properly
 	public static boolean purchase(Player player, int location) {
 		logger.info("purchase location=" + location + " by " + player);
 

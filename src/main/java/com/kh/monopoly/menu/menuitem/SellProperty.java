@@ -7,6 +7,9 @@ import com.kh.monopoly.board.space.property.IProperty;
 import com.kh.monopoly.input.Keyboard;
 import com.kh.monopoly.player.Player;
 
+//FIXME
+// Broken - Player purchasing already owned property is not handled
+// properly
 public class SellProperty implements Runnable {
 
 	@Override

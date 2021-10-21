@@ -18,12 +18,7 @@ public class RollDice implements Runnable {
 		Player curPlayer = game.getCurrentPlayer();
 
 		// move the player
-		int[] roll = Dice.roll();
-		if (roll[0] == roll[1]) {
-			game.incrementDoubleCount();
-		}
-		int sum = roll[0] + roll[1];
-		curPlayer.move(sum);
+		curPlayer.move(Dice.getInstance().roll());
 
 		// check whether the player landed on chance
 		if (curPlayer.landedOn(Chance.class)) {
@@ -49,7 +44,7 @@ public class RollDice implements Runnable {
 
 		// must be last action
 		if (curPlayer.landedOn(GoToJail.class)) {
-			curPlayer.goToJail();
+			curPlayer.setPosition(Board.getJailPosition());
 		}
 	}
 

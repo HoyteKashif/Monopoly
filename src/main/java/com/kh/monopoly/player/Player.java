@@ -47,9 +47,9 @@ public class Player {
 //		return Board.isGoToJail(getPosition());
 //	}
 
-	public void goToJail() {
-		setPosition(Board.jail());
-	}
+//	public void goToJail() {
+//		setPosition(Board.jail());
+//	}
 
 	public String getName() {
 		return name;
