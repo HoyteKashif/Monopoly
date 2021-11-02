@@ -12,9 +12,9 @@ https://bytes.com/topic/java/insights
 
 -- implement Community Chest card selection
 
--- the user is picking up a chance or community chest card when they land on either
+-- implement House Purchasing
 
--- add house/hotel purchasing behavior
+-- implement Hotel Purchasing
 
 -- check for any additional rules when the user roles doubles
 

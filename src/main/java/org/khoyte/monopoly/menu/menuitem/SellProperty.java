@@ -15,8 +15,6 @@ public class SellProperty implements Runnable {
 	@Override
 	public void run() {
 
-		Keyboard kb = new Keyboard();
-
 		Game game = Game.getInstance();
 		Player curPlayer = game.getCurrentPlayer();
 
@@ -26,7 +24,7 @@ public class SellProperty implements Runnable {
 			IProperty property = Board.getProperty(location);
 			game.print(property);
 
-			String input = kb.readLine("Do you want to purchase " + property.deed().name() + "? ",
+			String input = Keyboard.getInstance().readLine("Do you want to purchase " + property.deed().name() + "? ",
 					"Error - Invalid Input.");
 
 			if (input.equals("y") || input.equals("yes")) {

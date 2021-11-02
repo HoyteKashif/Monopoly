@@ -26,43 +26,60 @@ public class Chance extends Space {
 	}
 
 	static {
+		/*
+		 * Advance to "Go". (Collect $200)
+		 */
 		deck[0] = new ChanceCard("Advance to Go") {
 			@Override
 			public void action(Player player) {
 				logger.info(this);
 
-				// advance to go
+				// Advance to go
 				player.setPosition(0);
 
-				// Advance to "Go". (Collect $200)
+				// Collect $200
 				player.addCash(200);
 
 			}
 		};
+		/*
+		 * Advance to Illinois Avenue
+		 */
 		deck[1] = new ChanceCard("Advance to Illinois Ave.") {
 			@Override
 			public void action(Player player) {
 				logger.info(this);
 
-				// Advance to Illinois Avenue
-				boolean passedGo = Board.advancePlayer(player, Board.findStreetByName("Illinois Avenue"));
+				int curPosition = player.getPosition();
+				int newPosition = Board.findStreetByName("Illinois Avenue");
 
-				// If you pass Go, collect $200
+				player.setPosition(newPosition);
+
+				// If they pass Go then they also collect $200
+				boolean passedGo = curPosition > newPosition;
+
 				if (passedGo) {
 					player.addCash(200);
 				}
 
 			}
 		};
+		/*
+		 * Advance to St. Charles Place
+		 */
 		deck[2] = new ChanceCard("Advance to St. Charles Place.") {
 			@Override
 			public void action(Player player) {
 				logger.info(this);
 
-				// Advance to St. Charles Place
-				boolean passedGo = Board.advancePlayer(player, Board.findStreetByName("St. Charles Place"));
+				int curPosition = player.getPosition();
+				int newPosition = Board.findStreetByName("St. Charles Place");
 
-				// if you pass Go, collect $200
+				player.setPosition(newPosition);
+
+				// If they pass Go then they also collect $200
+				boolean passedGo = curPosition > newPosition;
+
 				if (passedGo) {
 					player.addCash(200);
 				}
@@ -80,6 +97,7 @@ public class Chance extends Space {
 						player.addCash(200);
 					}
 				} while (!Board.isUtility(player.getPosition()));
+
 				// If unowned, you may buy it from the Bank.
 
 				// If owned, throw dice and pay owner a total 10 (ten) times the amount

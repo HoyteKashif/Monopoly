@@ -1,6 +1,7 @@
 package org.khoyte.monopoly;
 
 import java.math.BigDecimal;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.log4j.Logger;
 import org.khoyte.monopoly.board.space.property.deed.Deed;
@@ -16,6 +17,25 @@ public class Bank {
 	public static final Logger logger = Logger.getLogger(Bank.class);
 
 	public static final IDeed[] deeds = new Deed[40];
+
+	/**
+	 * the maximum number of purchasable houses in the game
+	 */
+	public static final int MAX_NUMBER_OF_HOUSES_IN_GAME = 32;
+
+	private static AtomicInteger available_houses = new AtomicInteger(MAX_NUMBER_OF_HOUSES_IN_GAME);
+
+	public static void decAvailableHouses() {
+		available_houses.decrementAndGet();
+	}
+
+	public static void incAvailableHouses() {
+		available_houses.incrementAndGet();
+	}
+
+	public static int getAvailableHouses() {
+		return available_houses.intValue();
+	}
 
 	/**
 	 * Already Owned
@@ -53,32 +73,16 @@ public class Bank {
 			return false;
 		}
 
-//		if (deed instanceof RailRoadDeed) {
-//			price = ((RailRoadDeed) deed).price();
-//		}
-//
-//		if (deed instanceof StreetDeed) {
-//			price = ((StreetDeed) deed).price();
-//		}
-//
-//		if (deed instanceof UtilityDeed) {
-//			price = ((UtilityDeed) deed).price();
-//		}
-
-//		if (price == 0) {
-//			return false;
-//		}
-
-		// charge the player the purchase price
+		// Charge the player the purchase price
 		// if they can afford it
 		// and append the properties deed to the
 		// end of the players property list
 		// and remove the property deed from the
 		// deeds list held by the Bank
 		if (player.getCashBalance().compareTo(BigDecimal.valueOf(price)) >= 0) {
-			System.out.println("current balance: " + player.getCashBalance());
+			System.out.println("Current balance: " + player.getCashBalance());
 			player.subtractCash(price);
-			System.out.println("new balance: " + player.getCashBalance());
+			System.out.println("New balance: " + player.getCashBalance());
 			player.getDeeds()[location] = deed;
 			deeds[location] = null;
 			return true;
@@ -93,12 +97,8 @@ public class Bank {
 	 * @return
 	 * @throws NullPointerException
 	 */
-	static StreetDeed getStreetDeed(int location) throws NullPointerException {
-
-		if (!(deeds[location] instanceof StreetDeed))
-			throw new IllegalArgumentException();
-
-		return (StreetDeed) deeds[location];
+	public static StreetDeed getStreetDeed(int location) throws NullPointerException {
+		return cast(deeds[location], StreetDeed.class);
 	}
 
 	/**
@@ -107,11 +107,8 @@ public class Bank {
 	 * @return
 	 * @throws IllegalArgumentException
 	 */
-	static UtilityDeed getUtilityDeed(int location) throws IllegalArgumentException {
-		if (!(deeds[location] instanceof UtilityDeed))
-			throw new IllegalArgumentException();
-
-		return (UtilityDeed) deeds[location];
+	public static UtilityDeed getUtilityDeed(int location) throws IllegalArgumentException {
+		return cast(deeds[location], UtilityDeed.class);
 	}
 
 	/**
@@ -120,10 +117,16 @@ public class Bank {
 	 * @return
 	 * @throws IllegalArgumentException
 	 */
-	static RailRoadDeed getRailRoadDeed(int location) throws IllegalArgumentException {
-		if (!(deeds[location] instanceof RailRoadDeed))
-			throw new IllegalArgumentException();
+	public static RailRoadDeed getRailRoadDeed(int location) throws IllegalArgumentException {
+		return cast(deeds[location], RailRoadDeed.class);
+	}
 
-		return (RailRoadDeed) deeds[location];
+	private static <D extends IDeed> D cast(Object obj, Class<D> cls) {
+
+		if (cls.isInstance(obj))
+			return cls.cast(obj);
+
+		throw new IllegalArgumentException();
+
 	}
 }

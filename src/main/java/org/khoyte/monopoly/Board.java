@@ -1,6 +1,7 @@
 package org.khoyte.monopoly;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,12 +16,11 @@ import org.khoyte.monopoly.board.space.property.RailRoad;
 import org.khoyte.monopoly.board.space.property.Street;
 import org.khoyte.monopoly.board.space.property.Utility;
 import org.khoyte.monopoly.board.space.property.deed.StreetDeed;
-import org.khoyte.monopoly.player.Player;
 
 public class Board {
 	public static final Object[] board = new Object[40];
 
-	public static final Map<String, List<Street>> streetColorGroups = new HashMap<>();
+	private static Map<String, List<Street>> streetColorGroups;
 
 	public static final int[] COMMUNITY_CHEST = { 2, 17, 33 };
 
@@ -44,7 +44,19 @@ public class Board {
 		Board.board[index] = space;
 	}
 
-	public static void initColorGrouping() {
+	public static Map<String, List<Street>> getStreetGroups() {
+
+		if (streetColorGroups == null) {
+			initColorGrouping();
+		}
+
+		return streetColorGroups;
+	}
+
+	private static void initColorGrouping() {
+
+		streetColorGroups = new HashMap<>();
+
 		for (int i = 0; i < board.length; i++) {
 			if (isStreet(i)) {
 				Street street = getStreet(i);
@@ -58,6 +70,8 @@ public class Board {
 				}
 			}
 		}
+
+		streetColorGroups = Collections.unmodifiableMap(streetColorGroups);
 	}
 
 	public static Map<String, List<Street>> getStreetsByColorGroup() {
@@ -230,17 +244,17 @@ public class Board {
 	 * @param iSpace
 	 * @return
 	 */
-	@Deprecated
+//	@Deprecated
 	// Replace with player.landedOn
-	public static boolean isChance(int iSpace) {
-
-		for (int i : CHANCE) {
-			if (iSpace == i) {
-				return true;
-			}
-		}
-		return false;
-	}
+//	public static boolean isChance(int iSpace) {
+//
+//		for (int i : CHANCE) {
+//			if (iSpace == i) {
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
 
 	/**
 	 * Find the location of a Street by the Street's name
@@ -269,18 +283,18 @@ public class Board {
 	 * @return true if the player lands on or crosses go in the processes, otherwise
 	 *         false
 	 */
-	public static boolean advancePlayer(Player player, int newPosition) {
-
-		int curPosition = player.getPosition();
-
-		player.setPosition(newPosition);
-
-		// did they pass Go?
-		if (curPosition > newPosition) {
-			return true;
-		}
-
-		return false;
-	}
+//	public static boolean advancePlayer(Player player, int newPosition) {
+//
+//		int curPosition = player.getPosition();
+//
+//		player.setPosition(newPosition);
+//
+//		// did they pass Go?
+//		if (curPosition > newPosition) {
+//			return true;
+//		}
+//
+//		return false;
+//	}
 
 }

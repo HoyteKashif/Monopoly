@@ -20,7 +20,6 @@ import org.khoyte.monopoly.board.space.property.deed.IDeed;
 import org.khoyte.monopoly.board.space.property.deed.RailRoadDeed;
 import org.khoyte.monopoly.board.space.property.deed.StreetDeed;
 import org.khoyte.monopoly.board.space.property.deed.UtilityDeed;
-import org.khoyte.monopoly.input.Keyboard;
 import org.khoyte.monopoly.menu.MenuFactory;
 import org.khoyte.monopoly.menu.TextMenu;
 import org.khoyte.monopoly.player.Player;
@@ -31,8 +30,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 public class Game {
 
 	static final Logger logger = Logger.getLogger(Game.class);
-
-	public Keyboard keyboard = new Keyboard();
 
 	private final PlayerQueue playerQueue;
 
@@ -95,7 +92,6 @@ public class Game {
 					Board.board[idx] = new FreeParking();
 				}
 			}
-			Board.initColorGrouping();
 
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);

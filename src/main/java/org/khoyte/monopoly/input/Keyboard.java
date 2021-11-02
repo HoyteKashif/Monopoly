@@ -11,14 +11,25 @@ import java.util.Scanner;
 public class Keyboard {
 	private static final Keyboard keyboard = new Keyboard();
 
+	public static final String INVALID_INPUT = "Error - Invalid Input";
+
 	public static String read(String promptMsg, String errorMsg) {
 		return keyboard.readLine(promptMsg, errorMsg);
 	}
 
 	private Scanner in;
 
-	public Keyboard() {
+	private Keyboard() {
 		in = new Scanner(System.in);
+	}
+
+	private static Keyboard instance;
+
+	public static Keyboard getInstance() {
+		if (instance == null) {
+			instance = new Keyboard();
+		}
+		return instance;
 	}
 
 	public String readLine(String promptMsg, String errorMsg) {

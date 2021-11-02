@@ -18,8 +18,10 @@ public class RollDice implements Runnable {
 		Player curPlayer = game.getCurrentPlayer();
 
 		// move the player
-		curPlayer.move(Dice.getInstance().roll());
-
+//		curPlayer.move(Dice.getInstance().roll());
+		// FIXME delete, here for testing
+		curPlayer.move(1);
+		
 		// check whether the player landed on chance
 		if (curPlayer.landedOn(Chance.class)) {
 
