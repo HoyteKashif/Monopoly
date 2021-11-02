@@ -7,21 +7,24 @@ https://bugs.eclipse.org/bugs/show_bug.cgi?id=130932
 [Checkout]
 https://bytes.com/topic/java/insights
 
+[FIX]
+-- Player purchasing already owned property is not handled properly
+-- Player wealth is Calculated without the collective price of the buildings owned by this player
+
 [TODO]
--- implement Chance card selection
+-- Implement Chance card selection
 
--- implement Community Chest card selection
+-- Implement Community Chest card selection
 
--- implement House Purchasing
+-- Implement Hotel Purchasing
 
--- implement Hotel Purchasing
+-- Check for any additional rules when the user roles doubles
 
--- check for any additional rules when the user roles doubles
+-- Make it so that if the player throws doubles three times in succession, they go immediately to JAIL
 
--- make it so that if the player throws doubles three times in succession, they go immediately to JAIL
-
--- determine the order of the players by randomly rolling the dice then 
+-- Determine the order of the players by randomly rolling the dice then 
 putting the players in order from highest to lowest value
 
--- if a player lands on a property and they do not wish to purchase
+-- If a player lands on a property and they do not wish to purchase
 it allow their to be an auction. Bank sells the property to the highest bidder. Bidding may start at any price.
+

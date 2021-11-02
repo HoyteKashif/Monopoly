@@ -35,8 +35,7 @@ public class Board {
 	 * 
 	 */
 	// FIXME this should just be replaced with a final integer since the value can
-	// just
-	// be read by me
+	// just be read by me
 	public static final int[] JAIL = new int[1];
 
 	public static void insertSpace(int index, ISpace space) {
@@ -90,7 +89,6 @@ public class Board {
 				}
 			}
 		}
-		System.out.println(map.size());
 		return map;
 	}
 
@@ -239,24 +237,6 @@ public class Board {
 	}
 
 	/**
-	 * Is this space on the board the location of Chance
-	 * 
-	 * @param iSpace
-	 * @return
-	 */
-//	@Deprecated
-	// Replace with player.landedOn
-//	public static boolean isChance(int iSpace) {
-//
-//		for (int i : CHANCE) {
-//			if (iSpace == i) {
-//				return true;
-//			}
-//		}
-//		return false;
-//	}
-
-	/**
 	 * Find the location of a Street by the Street's name
 	 * 
 	 * @param name
@@ -274,27 +254,5 @@ public class Board {
 		// could not find the street by name
 		return -1;
 	}
-
-	/**
-	 * Move the player to a new space on the board
-	 * 
-	 * @param player
-	 * @param newPosition
-	 * @return true if the player lands on or crosses go in the processes, otherwise
-	 *         false
-	 */
-//	public static boolean advancePlayer(Player player, int newPosition) {
-//
-//		int curPosition = player.getPosition();
-//
-//		player.setPosition(newPosition);
-//
-//		// did they pass Go?
-//		if (curPosition > newPosition) {
-//			return true;
-//		}
-//
-//		return false;
-//	}
 
 }
