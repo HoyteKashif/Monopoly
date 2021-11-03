@@ -1,17 +1,17 @@
-##Resources
+## Resources
 https://bytes.com/topic/java/insights/870013-text-based-menus
 https://bytes.com/topic/java/answers/869742-display-menu
 https://stackoverflow.com/questions/30249324/how-to-get-java-to-wait-for-user-input/30249614
 https://bugs.eclipse.org/bugs/show_bug.cgi?id=130932
 
-##Checkout
+## Checkout
 https://bytes.com/topic/java/insights
 
-##FIXME
+## FIXME
 - [ ] Player purchasing already owned property is not handled properly
 - [ ] Player wealth is Calculated without the collective price of the buildings owned by this player
 
-##TODO
+## TODO
 - [ ] Implement Chance card selection
 
 - [ ] Implement Community Chest card selection
