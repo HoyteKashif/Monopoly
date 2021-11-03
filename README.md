@@ -1,11 +1,11 @@
 ## Resources
-https://bytes.com/topic/java/insights/870013-text-based-menus
-https://bytes.com/topic/java/answers/869742-display-menu
-https://stackoverflow.com/questions/30249324/how-to-get-java-to-wait-for-user-input/30249614
-https://bugs.eclipse.org/bugs/show_bug.cgi?id=130932
+* https://bytes.com/topic/java/insights/870013-text-based-menus
+* https://bytes.com/topic/java/answers/869742-display-menu
+* https://stackoverflow.com/questions/30249324/how-to-get-java-to-wait-for-user-input/30249614
+* https://bugs.eclipse.org/bugs/show_bug.cgi?id=130932
 
 ## Checkout
-https://bytes.com/topic/java/insights
+* https://bytes.com/topic/java/insights
 
 ## FIXME
 - [ ] Player purchasing already owned property is not handled properly
