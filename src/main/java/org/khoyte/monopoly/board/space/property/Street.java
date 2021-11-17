@@ -4,10 +4,16 @@ import org.khoyte.monopoly.board.space.property.deed.StreetDeed;
 
 public class Street extends Property {
 
-	public int numHouses;
+	private int numHouses;
+
+	private boolean hasHotel;
 
 	public Street(StreetDeed deed) {
 		super(deed);
+	}
+
+	public void removeHouses(int amount) {
+		numHouses -= amount;
 	}
 
 	public void addHouse() {
@@ -16,6 +22,18 @@ public class Street extends Property {
 
 	public int getNumOfHouses() {
 		return numHouses;
+	}
+
+	public boolean hasHotel() {
+		return hasHotel;
+	}
+
+	public void addHotel() {
+		this.hasHotel = true;
+	}
+
+	public void removeHotel() {
+		this.hasHotel = false;
 	}
 
 	public StreetDeed getDeed() {

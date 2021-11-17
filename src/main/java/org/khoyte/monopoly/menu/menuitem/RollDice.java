@@ -19,7 +19,7 @@ public class RollDice implements Runnable {
 
 		// move the player
 		curPlayer.move(Dice.getInstance().roll());
-
+ 
 		// check whether the player landed on chance
 		if (curPlayer.landedOn(Chance.class)) {
 

@@ -19,11 +19,27 @@ public class Bank {
 	public static final IDeed[] deeds = new Deed[40];
 
 	/**
+	 * The maximum number of purchasable hotels in the game
+	 */
+	public static final int MAX_NUMBER_OF_HOTELS_IN_GAME = 12;
+
+	/**
 	 * the maximum number of purchasable houses in the game
 	 */
 	public static final int MAX_NUMBER_OF_HOUSES_IN_GAME = 32;
 
+	/**
+	 * the maximum number of houses allowed per Street
+	 */
+	public static final int MAX_HOUSES_PER_STREET = 4;
+
 	private static AtomicInteger available_houses = new AtomicInteger(MAX_NUMBER_OF_HOUSES_IN_GAME);
+
+	private static AtomicInteger available_hotels = new AtomicInteger(MAX_NUMBER_OF_HOTELS_IN_GAME);
+
+	public static void returnHouses(int amount) {
+		available_houses.addAndGet(amount);
+	}
 
 	public static void decAvailableHouses() {
 		available_houses.decrementAndGet();
@@ -35,6 +51,22 @@ public class Bank {
 
 	public static int getAvailableHouses() {
 		return available_houses.intValue();
+	}
+
+	public static void returnHotels(int amount) {
+		available_hotels.addAndGet(amount);
+	}
+
+	public static void decAvailableHotels() {
+		available_hotels.decrementAndGet();
+	}
+
+	public static void incAvailableHotels() {
+		available_hotels.incrementAndGet();
+	}
+
+	public static int getAvailableHotels() {
+		return available_hotels.intValue();
 	}
 
 	/**

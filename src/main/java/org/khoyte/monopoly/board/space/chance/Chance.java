@@ -151,6 +151,7 @@ public class Chance extends Space {
 				player.addCash(50);
 			}
 		};
+		// FIXME Not Implemented
 		/**
 		 * Get out of Jail Free. This card may be kept until needed, or traded/sold.
 		 * {This card may be kept until needed or sold/traded. Get Out of Jail Free.}

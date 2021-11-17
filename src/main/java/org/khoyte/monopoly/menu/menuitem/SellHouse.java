@@ -30,11 +30,6 @@ public class SellHouse implements Runnable {
 
 	private static final Logger LOGGER = Logger.getLogger(SellHouse.class);
 
-	/**
-	 * the maximum number of houses allowed per Street
-	 */
-	private static final int MAX_HOUSES_PER_STREET = 4;
-
 	@Override
 	public void run() {
 
@@ -58,12 +53,25 @@ public class SellHouse implements Runnable {
 		int theirCount;
 		// Official number of properties within a group
 		int actualCount;
-		for (Entry<String, List<Street>> entry : curPlayer.getGroupedProperties().entrySet()) {
+		color_group_itr: for (Entry<String, List<Street>> entry : curPlayer.getGroupedProperties().entrySet()) {
 
 			theirCount = entry.getValue().size();
 			actualCount = Board.getStreetGroups().get(entry.getKey()).size();
 
 			if (theirCount == actualCount) {
+
+				// Iterate through the individual properties
+				for (Street street : entry.getValue()) {
+
+					if (street.getNumOfHouses() < Bank.MAX_HOUSES_PER_STREET)
+						break;
+
+					// Skip groups that have at least one property with a hotel
+					if (street.hasHotel()) {
+						continue color_group_itr;
+					}
+				}
+
 				eligibleGroups.add(entry);
 			}
 		}
@@ -170,8 +178,8 @@ public class SellHouse implements Runnable {
 					continue house_distr_loop;
 				}
 
-				if (distrAmount > MAX_HOUSES_PER_STREET) {
-					game.print("Invalid Distribution - Amount must be less than " + MAX_HOUSES_PER_STREET);
+				if (distrAmount > Bank.MAX_HOUSES_PER_STREET) {
+					game.print("Invalid Distribution - Amount must be less than " + Bank.MAX_HOUSES_PER_STREET);
 					continue house_distr_loop;
 				}
 
@@ -191,8 +199,9 @@ public class SellHouse implements Runnable {
 			// Check for a invalid distribution difference of more than 1
 			for (int n = 1; n < aHouseDistr.length; n++) {
 
-				if (aHouseDistr[n] > MAX_HOUSES_PER_STREET) {
-					game.print("Invalid Distribution - Houses per property can not exceed " + MAX_HOUSES_PER_STREET);
+				if (aHouseDistr[n] > Bank.MAX_HOUSES_PER_STREET) {
+					game.print(
+							"Invalid Distribution - Houses per property can not exceed " + Bank.MAX_HOUSES_PER_STREET);
 					continue house_distr_loop;
 				}
 

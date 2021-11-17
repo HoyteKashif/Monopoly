@@ -28,3 +28,6 @@ putting the players in order from highest to lowest value
 - [ ] If a player lands on a property and they do not wish to purchase
 it allow their to be an auction. Bank sells the property to the highest bidder. Bidding may start at any price.
 
+## IMPROVEMENTS
+- [ ] Change the structure of the Chance class to follow the Singleton Pattern
+- [ ] Remove any usage of System.out.print that is outside of the Game class
