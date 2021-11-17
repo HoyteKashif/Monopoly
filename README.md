@@ -16,8 +16,6 @@
 
 - [ ] Implement Community Chest card selection
 
-- [ ] Implement Hotel Purchasing
-
 - [ ] Check for any additional rules when the user roles doubles
 
 - [ ] Make it so that if the player throws doubles three times in succession, they go immediately to JAIL
