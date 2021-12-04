@@ -1,10 +1,10 @@
-package org.khoyte.monopoly.menu;
+package org.khoyte.monopoly.menu.menuitem;
 
 public class TextMenuItem implements Runnable {
 	private String title;
 	private Runnable exec;
 
-	protected TextMenuItem(String title) {
+	public TextMenuItem(String title) {
 		this(title, null);
 	}
 

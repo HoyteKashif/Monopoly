@@ -1,11 +1,12 @@
 package org.khoyte.monopoly.menu;
 
-import org.khoyte.monopoly.menu.menuitem.PassDice;
-import org.khoyte.monopoly.menu.menuitem.PrintPlayerInfo;
-import org.khoyte.monopoly.menu.menuitem.RollDice;
-import org.khoyte.monopoly.menu.menuitem.SellHotel;
-import org.khoyte.monopoly.menu.menuitem.SellHouse;
-import org.khoyte.monopoly.menu.menuitem.SellProperty;
+import org.khoyte.monopoly.menu.menuitem.TextMenuItem;
+import org.khoyte.monopoly.menu.menuitem.task.PassDice;
+import org.khoyte.monopoly.menu.menuitem.task.PrintPlayerInfo;
+import org.khoyte.monopoly.menu.menuitem.task.RollDice;
+import org.khoyte.monopoly.menu.menuitem.task.SellHotel;
+import org.khoyte.monopoly.menu.menuitem.task.SellHouse;
+import org.khoyte.monopoly.menu.menuitem.task.SellProperty;
 
 public class MenuFactory {
 	public static TextMenu getMainMenu() {

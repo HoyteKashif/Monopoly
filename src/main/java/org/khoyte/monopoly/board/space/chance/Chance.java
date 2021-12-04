@@ -151,16 +151,15 @@ public class Chance extends Space {
 				player.addCash(50);
 			}
 		};
-		// FIXME Not Implemented
 		/**
 		 * Get out of Jail Free. This card may be kept until needed, or traded/sold.
 		 * {This card may be kept until needed or sold/traded. Get Out of Jail Free.}
 		 */
-		deck[6] = new ChanceCard("Get out of Jail Free.") {
+		deck[6] = new GetOutOfJailFree("Get out of Jail Free.") {
 			@Override
 			public void action(Player player) {
 				logger.info(this);
-				System.err.println("Unimplemented " + toString());
+				player.inJail(false);
 			}
 		};
 		deck[7] = new ChanceCard("Go Back Three Spaces.") {
@@ -178,7 +177,6 @@ public class Chance extends Space {
 			}
 
 		};
-		// FIXME Not Implemented
 		/**
 		 * Make general repairs on all your property: For each house pay $25, For each
 		 * hotel {pay} $100.
@@ -188,7 +186,9 @@ public class Chance extends Space {
 			@Override
 			public void action(Player player) {
 				logger.info(this);
-				System.err.println("Unimplemented " + toString());
+				int houseRepairCost = 25 * player.getOwnedHouseCount();
+				int hotelRepairCost = 100 * player.getOwnedHotelCount();
+				player.subtractCash(houseRepairCost + hotelRepairCost);
 			}
 		};
 		deck[10] = new ChanceCard("Pay poor tax of $15") {
@@ -269,24 +269,40 @@ public class Chance extends Space {
 
 	public static ChanceCard getNext() {
 
+		// If empty card stack
+		// then reset the stack
 		if (stack.isEmpty()) {
 			initCardStack();
 		}
 
+		// Get the next card off the top
 		return stack.pop();
 	}
 
 	private static void initCardStack() {
 
-		// shuffle the cards
+		// Create Random number generator
 		Random r = new Random();
+
+		// Shuffle the cards
+		// Iterate through all the chance cards
 		for (int i = deck.length - 1; i >= 1; i--) {
-			int j = r.nextInt(i + 1);
+
+			// Max value (Exclusive) of the Random Number
+			int randUpperBound = i + 1;
+
+			// Index between 0 and Upper Bound
+			int j = r.nextInt(randUpperBound);
+
+			// Swap the card at j with the card at i
+			// cards are swapped with a card at a
+			// smaller index in the array
 			ChanceCard temp = deck[j];
 			deck[j] = deck[i];
 			deck[i] = temp;
 		}
 
+		// Set the card stack to the newly shuffle deck
 		for (ChanceCard card : deck) {
 			stack.push(card);
 		}

@@ -2,6 +2,8 @@ package org.khoyte.monopoly.input;
 
 import java.util.Scanner;
 
+import org.khoyte.monopoly.shared.ValidationHelper;
+
 /**
  * Java Keyboard Class for user input Validation
  * 
@@ -46,20 +48,38 @@ public class Keyboard {
 			strInput = in.nextLine();
 
 			// Validate input
-			valid = strInput != null && !(strInput = strInput.trim()).isEmpty();
+			if (ValidationHelper.hasText(strInput))
+				break;
 
 		}
 
-		return strInput;
+		return ValidationHelper.getTrimmed(strInput);
+	}
+
+	public boolean readYN(String promptMsg, String errorMsg) {
+		String strInput = null;
+
+		while (true) {
+
+			// Prompt the user
+			System.out.println(promptMsg);
+
+			// Grab input from keyboard
+			strInput = in.nextLine();
+
+			if (ValidationHelper.hasText(strInput) && strInput.matches("[yYnN]"))
+				break;
+		}
+
+		return strInput.matches("(y|Y)") ? true : false;
 	}
 
 	public int readInteger(String promptMsg, String errorMsg) {
 		int num = 0;
 		String strInput;
-		boolean valid = false;
 
 		// Keep looping until valid input
-		while (valid == false) {
+		while (true) {
 
 			// Prompt the user
 			System.out.print(promptMsg);
@@ -70,7 +90,7 @@ public class Keyboard {
 			// Try to convert String to integer
 			try {
 				num = Integer.parseInt(strInput);
-				valid = true;
+				break;
 			} catch (NumberFormatException e) {
 				System.out.println(errorMsg);
 			}
@@ -82,10 +102,9 @@ public class Keyboard {
 	public double readDouble(String promptMsg, String errorMsg) {
 		double num = 0;
 		String strInput;
-		boolean valid = false;
 
 		// Keep looping until valid input
-		while (valid == false) {
+		while (true) {
 
 			// Prompt the user
 			System.out.print(promptMsg);
@@ -96,7 +115,7 @@ public class Keyboard {
 			// Try to convert String to double
 			try {
 				num = Double.parseDouble(strInput);
-				valid = true;
+				break;
 			} catch (NumberFormatException e) {
 				System.out.println(errorMsg);
 			}
@@ -108,10 +127,9 @@ public class Keyboard {
 	public int readInteger(String promptMsg, String errorMsg, int low, int high) {
 		int num = 0;
 		String strInput;
-		boolean valid = false;
 
 		// Keep looping until valid input
-		while (valid == false) {
+		while (true) {
 
 			// Prompt the user
 			System.out.print(promptMsg);
@@ -123,7 +141,7 @@ public class Keyboard {
 			try {
 				num = Integer.parseInt(strInput);
 				if (num >= low && num <= high)
-					valid = true;
+					break;
 				else
 					System.out.println(errorMsg);
 			} catch (NumberFormatException e) {

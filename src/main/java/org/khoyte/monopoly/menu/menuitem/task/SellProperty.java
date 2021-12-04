@@ -1,4 +1,4 @@
-package org.khoyte.monopoly.menu.menuitem;
+package org.khoyte.monopoly.menu.menuitem.task;
 
 import org.khoyte.monopoly.Bank;
 import org.khoyte.monopoly.Board;

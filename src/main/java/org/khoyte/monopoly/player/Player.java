@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import org.khoyte.monopoly.Bank;
 import org.khoyte.monopoly.Board;
 import org.khoyte.monopoly.board.space.Space;
+import org.khoyte.monopoly.board.space.chance.GetOutOfJailFree;
 import org.khoyte.monopoly.board.space.property.Street;
 import org.khoyte.monopoly.board.space.property.deed.IDeed;
 import org.khoyte.monopoly.board.space.property.deed.StreetDeed;
@@ -29,9 +30,38 @@ public class Player {
 
 	private final String name;
 
+	private boolean inJail;
+
+	private GetOutOfJailFree getOutOfJailFreeCard;
+
 	public Player(String name) {
 		this.name = name;
 		this.deeds = new IDeed[Bank.deeds.length];
+	}
+
+	public void inJail(boolean inJail) {
+		this.inJail = inJail;
+	}
+
+	public boolean isInJail() {
+		return inJail;
+	}
+
+	public void take(GetOutOfJailFree chanceCard) {
+		this.getOutOfJailFreeCard = chanceCard;
+	}
+
+	public boolean hasGetOutOfJailFreeCard() {
+		return getOutOfJailFreeCard != null;
+	}
+
+	public void useGetOutOfJailFreeCard() {
+		if (getOutOfJailFreeCard == null)
+			return;
+
+		this.getOutOfJailFreeCard.action(this);
+		this.getOutOfJailFreeCard.placeBackInDeck();
+		this.getOutOfJailFreeCard = null;
 	}
 
 	public <S extends Space> boolean landedOn(Class<S> spaceType) {
@@ -58,24 +88,29 @@ public class Player {
 		return deeds[i] != null;
 	}
 
-	public List<StreetDeed> getProperties() {
-		List<StreetDeed> properties = new ArrayList<>();
-		for (IDeed deed : getDeeds()) {
-			if (deed instanceof StreetDeed) {
-				properties.add((StreetDeed) deed);
-			}
-		}
-		return properties;
+	public boolean ownsProperty() {
+		return getOwnedStreets().size() > 0;
 	}
 
-	public Map<String, List<Street>> getGroupedProperties() {
+	public int getOwnedHouseCount() {
+		int count = 0;
+		for (Street street : getOwnedStreets()) {
+			count += street.getNumOfHouses();
+		}
+		return count;
+	}
 
-		// Initialize the map which will hold the groupings
-		// key = Color Group , value = List of Streets in group
-		Map<String, List<Street>> map = new HashMap<>();
+	public int getOwnedHotelCount() {
+		int count = 0;
+		for (Street street : getOwnedStreets()) {
+			if (street.hasHotel())
+				++count;
+		}
+		return count;
+	}
 
-		// Iterate over all owned properties
-		// adding them to the Color Group they are in
+	public List<Street> getOwnedStreets() {
+		List<Street> streets = new ArrayList<>();
 		for (int i = 0; i < getDeeds().length; i++) {
 
 			// Done because the Deeds Array contains null
@@ -86,14 +121,29 @@ public class Player {
 			// Filter for only Streets
 			if (Board.isStreet(i)) {
 				Street street = Board.getStreet(i);
-				String colorGroup = ((StreetDeed) street.deed()).colorGroup();
-				if (map.containsKey(colorGroup)) {
-					map.get(colorGroup).add(street);
-				} else {
-					List<Street> streets = new ArrayList<>();
-					streets.add(street);
-					map.put(colorGroup, streets);
-				}
+				streets.add(street);
+			}
+		}
+		return streets;
+	}
+
+	public Map<String, List<Street>> getGroupedProperties() {
+
+		// Initialize the map which will hold the groupings
+		// key = Color Group , value = List of Streets in group
+		Map<String, List<Street>> map = new HashMap<>();
+
+		// Iterate over all owned properties
+		// adding them to the Color Group they are in
+		for (Street street : getOwnedStreets()) {
+
+			String colorGroup = ((StreetDeed) street.deed()).colorGroup();
+			if (map.containsKey(colorGroup)) {
+				map.get(colorGroup).add(street);
+			} else {
+				List<Street> streets = new ArrayList<>();
+				streets.add(street);
+				map.put(colorGroup, streets);
 			}
 
 		}
@@ -127,7 +177,7 @@ public class Player {
 	}
 
 	public void addCash(BigDecimal amount) {
-		logger.info("add cash $" + amount + " " + this);
+		logger.info("Add cash $" + amount + " " + this);
 		this.cashBalance = this.cashBalance.add(amount);
 	}
 
@@ -140,7 +190,7 @@ public class Player {
 	}
 
 	public void subtractCash(BigDecimal amount) {
-		logger.info("subtract cash $" + amount + " " + this);
+		logger.info("Subtract cash $" + amount + " " + this);
 		this.cashBalance = this.cashBalance.subtract(amount);
 	}
 
@@ -149,7 +199,7 @@ public class Player {
 	}
 
 	public void setPosition(int p_position) {
-		logger.info("set position [request=" + p_position + "; actual=" + Board.boardIndexOf(p_position) + "]");
+		logger.info("Set position [request=" + p_position + "; actual=" + Board.boardIndexOf(p_position) + "]");
 
 		if (p_position < 0) {
 			throw new IllegalArgumentException("Value is less than 0");
@@ -163,7 +213,7 @@ public class Player {
 	}
 
 	private static int move(int valueToMove, int curPosition, int arrLength) {
-		logger.info("move [ValueToMove=" + valueToMove + ";CurrentPosition=" + curPosition + ";ArrayLength=" + arrLength
+		logger.info("Move [ValueToMove=" + valueToMove + ";CurrentPosition=" + curPosition + ";ArrayLength=" + arrLength
 				+ "]");
 
 		// Calculated position to move to

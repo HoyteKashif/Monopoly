@@ -1,4 +1,4 @@
-package org.khoyte.monopoly.menu.menuitem;
+package org.khoyte.monopoly.menu.menuitem.task;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -10,7 +10,6 @@ import org.khoyte.monopoly.Bank;
 import org.khoyte.monopoly.Board;
 import org.khoyte.monopoly.Game;
 import org.khoyte.monopoly.board.space.property.Street;
-import org.khoyte.monopoly.board.space.property.deed.StreetDeed;
 import org.khoyte.monopoly.input.Keyboard;
 import org.khoyte.monopoly.player.Player;
 import org.khoyte.monopoly.shared.ValidationHelper;
@@ -35,11 +34,8 @@ public class SellHotel implements Runnable {
 		Player curPlayer = game.getCurrentPlayer();
 		Keyboard keyboard = Keyboard.getInstance();
 
-		// Get all properties owned by the Player
-		List<StreetDeed> properties = curPlayer.getProperties();
-
 		// Do Nothing!
-		if (properties.isEmpty()) {
+		if (!curPlayer.ownsProperty()) {
 			game.print("You have no property eligible for a Hotel.");
 			return;
 		}

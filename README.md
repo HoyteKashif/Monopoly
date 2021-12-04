@@ -12,18 +12,18 @@
 - [ ] Player wealth is Calculated without the collective price of the buildings owned by this player
 
 ## TODO
-- [ ] Implement Chance card selection
+1. Implement Chance card selection: ("Go To Jail", "Make general repairs on all your property: For each house pay $25, For each hotel pay $100.")
 
-- [ ] Implement Community Chest card selection
+2. Implement Community Chest card selection
 
-- [ ] Check for any additional rules when the user roles doubles
+3. Check for any additional rules when the user roles doubles
 
-- [ ] Make it so that if the player throws doubles three times in succession, they go immediately to JAIL
+4. Make it so that if the player throws doubles three times in succession, they go immediately to JAIL
 
-- [ ] Determine the order of the players by randomly rolling the dice then 
+6. Determine the order of the players by randomly rolling the dice then 
 putting the players in order from highest to lowest value
 
-- [ ] If a player lands on a property and they do not wish to purchase
+7. If a player lands on a property and they do not wish to purchase
 it allow their to be an auction. Bank sells the property to the highest bidder. Bidding may start at any price.
 
 ## IMPROVEMENTS
