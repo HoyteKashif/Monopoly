@@ -3,7 +3,8 @@ package kh.monopoly;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.khoyte.monopoly.player.Player;
+
+import kh.monopoly.player.Player;
 
 public class GameTest {
 

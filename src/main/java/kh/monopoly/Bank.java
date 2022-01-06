@@ -4,13 +4,14 @@ import java.math.BigDecimal;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.log4j.Logger;
-import org.khoyte.monopoly.board.space.property.deed.Deed;
-import org.khoyte.monopoly.board.space.property.deed.IDeed;
-import org.khoyte.monopoly.board.space.property.deed.Purchasable;
-import org.khoyte.monopoly.board.space.property.deed.RailRoadDeed;
-import org.khoyte.monopoly.board.space.property.deed.StreetDeed;
-import org.khoyte.monopoly.board.space.property.deed.UtilityDeed;
-import org.khoyte.monopoly.player.Player;
+
+import kh.monopoly.board.space.property.deed.Deed;
+import kh.monopoly.board.space.property.deed.IDeed;
+import kh.monopoly.board.space.property.deed.Purchasable;
+import kh.monopoly.board.space.property.deed.RailRoadDeed;
+import kh.monopoly.board.space.property.deed.StreetDeed;
+import kh.monopoly.board.space.property.deed.UtilityDeed;
+import kh.monopoly.player.Player;
 
 public class Bank {
 

@@ -1,7 +1,8 @@
 package kh.monopoly;
 
 import org.apache.log4j.PropertyConfigurator;
-import org.khoyte.monopoly.player.Player;
+
+import kh.monopoly.player.Player;
 
 public class Main {
 

@@ -7,25 +7,26 @@ import java.io.IOException;
 import java.util.Objects;
 
 import org.apache.log4j.Logger;
-import org.khoyte.monopoly.board.space.FreeParking;
-import org.khoyte.monopoly.board.space.Go;
-import org.khoyte.monopoly.board.space.GoToJail;
-import org.khoyte.monopoly.board.space.Jail;
-import org.khoyte.monopoly.board.space.chance.Chance;
-import org.khoyte.monopoly.board.space.communitychest.CommunityChest;
-import org.khoyte.monopoly.board.space.property.RailRoad;
-import org.khoyte.monopoly.board.space.property.Street;
-import org.khoyte.monopoly.board.space.property.Utility;
-import org.khoyte.monopoly.board.space.property.deed.IDeed;
-import org.khoyte.monopoly.board.space.property.deed.RailRoadDeed;
-import org.khoyte.monopoly.board.space.property.deed.StreetDeed;
-import org.khoyte.monopoly.board.space.property.deed.UtilityDeed;
-import org.khoyte.monopoly.menu.MenuFactory;
-import org.khoyte.monopoly.menu.TextMenu;
-import org.khoyte.monopoly.player.Player;
-import org.khoyte.monopoly.player.PlayerQueue;
 
 import com.fasterxml.jackson.databind.JsonNode;
+
+import kh.monopoly.board.space.FreeParking;
+import kh.monopoly.board.space.Go;
+import kh.monopoly.board.space.GoToJail;
+import kh.monopoly.board.space.Jail;
+import kh.monopoly.board.space.chance.Chance;
+import kh.monopoly.board.space.communitychest.CommunityChest;
+import kh.monopoly.board.space.property.RailRoad;
+import kh.monopoly.board.space.property.Street;
+import kh.monopoly.board.space.property.Utility;
+import kh.monopoly.board.space.property.deed.IDeed;
+import kh.monopoly.board.space.property.deed.RailRoadDeed;
+import kh.monopoly.board.space.property.deed.StreetDeed;
+import kh.monopoly.board.space.property.deed.UtilityDeed;
+import kh.monopoly.menu.MenuFactory;
+import kh.monopoly.menu.TextMenu;
+import kh.monopoly.player.Player;
+import kh.monopoly.player.PlayerQueue;
 
 public class Game {
 

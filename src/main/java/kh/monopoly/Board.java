@@ -7,15 +7,16 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.khoyte.monopoly.board.space.GoToJail;
-import org.khoyte.monopoly.board.space.ISpace;
-import org.khoyte.monopoly.board.space.Tax;
-import org.khoyte.monopoly.board.space.property.IProperty;
-import org.khoyte.monopoly.board.space.property.Property;
-import org.khoyte.monopoly.board.space.property.RailRoad;
-import org.khoyte.monopoly.board.space.property.Street;
-import org.khoyte.monopoly.board.space.property.Utility;
-import org.khoyte.monopoly.board.space.property.deed.StreetDeed;
+
+import kh.monopoly.board.space.GoToJail;
+import kh.monopoly.board.space.ISpace;
+import kh.monopoly.board.space.Tax;
+import kh.monopoly.board.space.property.IProperty;
+import kh.monopoly.board.space.property.Property;
+import kh.monopoly.board.space.property.RailRoad;
+import kh.monopoly.board.space.property.Street;
+import kh.monopoly.board.space.property.Utility;
+import kh.monopoly.board.space.property.deed.StreetDeed;
 
 public class Board {
 	public static final Object[] board = new Object[40];

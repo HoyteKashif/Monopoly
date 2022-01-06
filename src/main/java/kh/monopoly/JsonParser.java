@@ -6,16 +6,16 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.khoyte.monopoly.board.space.Tax;
-import org.khoyte.monopoly.board.space.property.deed.Deed;
-import org.khoyte.monopoly.board.space.property.deed.RailRoadDeed;
-import org.khoyte.monopoly.board.space.property.deed.StreetDeed;
-import org.khoyte.monopoly.board.space.property.deed.UtilityDeed;
-
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import kh.monopoly.board.space.Tax;
+import kh.monopoly.board.space.property.deed.Deed;
+import kh.monopoly.board.space.property.deed.RailRoadDeed;
+import kh.monopoly.board.space.property.deed.StreetDeed;
+import kh.monopoly.board.space.property.deed.UtilityDeed;
 
 public class JsonParser {
 	public static void main(String[] args) throws JsonParseException, IOException {

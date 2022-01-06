@@ -3,7 +3,8 @@ package kh.monopoly;
 import java.util.Random;
 
 import org.apache.log4j.Logger;
-import org.khoyte.monopoly.player.Player;
+
+import kh.monopoly.player.Player;
 
 public class Dice {
 
