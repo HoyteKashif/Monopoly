@@ -1,4 +1,4 @@
-package org.khoyte.monopoly;
+package kh.monopoly;
 
 import java.util.ArrayList;
 import java.util.Collections;

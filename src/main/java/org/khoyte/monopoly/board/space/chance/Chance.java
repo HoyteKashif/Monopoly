@@ -4,13 +4,14 @@ import java.util.Random;
 import java.util.Stack;
 
 import org.apache.log4j.Logger;
-import org.khoyte.monopoly.Bank;
-import org.khoyte.monopoly.Board;
-import org.khoyte.monopoly.Dice;
-import org.khoyte.monopoly.Game;
 import org.khoyte.monopoly.board.space.Go;
 import org.khoyte.monopoly.board.space.Space;
 import org.khoyte.monopoly.player.Player;
+
+import kh.monopoly.Bank;
+import kh.monopoly.Board;
+import kh.monopoly.Dice;
+import kh.monopoly.Game;
 
 public class Chance extends Space {
 
@@ -202,7 +203,6 @@ public class Chance extends Space {
 		/**
 		 * Take a trip to the Reading RailRoad. Advance token if you pass Go, collect
 		 * $200.
-		 * 
 		 */
 		deck[11] = new ChanceCard("Take a trip to Reading Railroad.") {
 			@Override

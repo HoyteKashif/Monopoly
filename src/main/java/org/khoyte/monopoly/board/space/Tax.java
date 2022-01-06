@@ -3,9 +3,10 @@ package org.khoyte.monopoly.board.space;
 import java.math.BigDecimal;
 
 import org.apache.log4j.Logger;
-import org.khoyte.monopoly.Game;
 import org.khoyte.monopoly.input.Keyboard;
 import org.khoyte.monopoly.player.Player;
+
+import kh.monopoly.Game;
 
 public class Tax extends Space {
 	private final String name;

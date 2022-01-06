@@ -6,13 +6,14 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
-import org.khoyte.monopoly.Bank;
-import org.khoyte.monopoly.Board;
-import org.khoyte.monopoly.Game;
 import org.khoyte.monopoly.board.space.property.Street;
 import org.khoyte.monopoly.input.Keyboard;
 import org.khoyte.monopoly.player.Player;
 import org.khoyte.monopoly.shared.ValidationHelper;
+
+import kh.monopoly.Bank;
+import kh.monopoly.Board;
+import kh.monopoly.Game;
 
 /**
  * When you have four houses on each property in a color group, you can buy a

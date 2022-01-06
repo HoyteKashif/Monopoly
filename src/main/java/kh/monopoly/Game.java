@@ -1,4 +1,4 @@
-package org.khoyte.monopoly;
+package kh.monopoly;
 
 import static java.lang.System.exit;
 import static java.lang.System.out;

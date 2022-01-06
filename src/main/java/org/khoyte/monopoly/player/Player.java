@@ -8,13 +8,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.khoyte.monopoly.Bank;
-import org.khoyte.monopoly.Board;
 import org.khoyte.monopoly.board.space.Space;
 import org.khoyte.monopoly.board.space.chance.GetOutOfJailFree;
 import org.khoyte.monopoly.board.space.property.Street;
 import org.khoyte.monopoly.board.space.property.deed.IDeed;
 import org.khoyte.monopoly.board.space.property.deed.StreetDeed;
+
+import kh.monopoly.Bank;
+import kh.monopoly.Board;
 
 public class Player {
 

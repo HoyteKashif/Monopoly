@@ -1,8 +1,5 @@
 package org.khoyte.monopoly.menu.menuitem.task;
 
-import org.khoyte.monopoly.Board;
-import org.khoyte.monopoly.Dice;
-import org.khoyte.monopoly.Game;
 import org.khoyte.monopoly.board.space.GoToJail;
 import org.khoyte.monopoly.board.space.Tax;
 import org.khoyte.monopoly.board.space.chance.Chance;
@@ -10,6 +7,10 @@ import org.khoyte.monopoly.board.space.chance.ChanceCard;
 import org.khoyte.monopoly.board.space.chance.GetOutOfJailFree;
 import org.khoyte.monopoly.input.Keyboard;
 import org.khoyte.monopoly.player.Player;
+
+import kh.monopoly.Board;
+import kh.monopoly.Dice;
+import kh.monopoly.Game;
 
 public class RollDice implements Runnable {
 
@@ -40,13 +41,11 @@ public class RollDice implements Runnable {
 
 			if (chanceCard instanceof GetOutOfJailFree) {
 				GetOutOfJailFree _card = (GetOutOfJailFree) chanceCard;
-				if (!_card.isRetainedByUser()) {
-					// Ask the player if they want to keep the card
-					// if yes then assign the card to them
-					if (Keyboard.getInstance().readYN("Do you want to keep the card?", "Error - Invalid Input.")) {
-						// Give them the card
-						curPlayer.take(_card);
-					}
+				// Ask the player if they want to keep the card
+				// if yes then assign the card to them
+				if (Keyboard.getInstance().readYN("Do you want to keep the card?", "Error - Invalid Input.")) {
+					// Give them the card
+					curPlayer.take(_card);
 				}
 			} else {
 				// Run the action

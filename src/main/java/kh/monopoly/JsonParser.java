@@ -1,4 +1,4 @@
-package org.khoyte.monopoly;
+package kh.monopoly;
 
 import java.io.File;
 import java.io.IOException;

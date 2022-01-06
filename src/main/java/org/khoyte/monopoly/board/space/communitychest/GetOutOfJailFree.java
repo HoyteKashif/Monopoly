@@ -1,7 +1,7 @@
-package org.khoyte.monopoly.board.space.chance;
+package org.khoyte.monopoly.board.space.communitychest;
 
 /** Use to indicate that the card is a GetOutOfJailFree **/
-public abstract class GetOutOfJailFree extends ChanceCard {
+public abstract class GetOutOfJailFree extends CommunityChestCard {
 
 	boolean retainedByUser;
 

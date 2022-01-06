@@ -1,4 +1,4 @@
-package org.khoyte.monopoly;
+package kh.monopoly;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.khoyte.monopoly.player.Player;

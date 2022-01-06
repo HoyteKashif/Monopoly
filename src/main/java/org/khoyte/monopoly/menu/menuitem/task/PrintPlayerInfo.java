@@ -2,10 +2,11 @@ package org.khoyte.monopoly.menu.menuitem.task;
 
 import java.util.List;
 
-import org.khoyte.monopoly.Board;
-import org.khoyte.monopoly.Game;
 import org.khoyte.monopoly.board.space.property.Street;
 import org.khoyte.monopoly.player.Player;
+
+import kh.monopoly.Board;
+import kh.monopoly.Game;
 
 public class PrintPlayerInfo implements Runnable {
 

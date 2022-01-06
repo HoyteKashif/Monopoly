@@ -1,4 +1,4 @@
-package org.khoyte.monopoly;
+package kh.monopoly;
 
 import java.math.BigDecimal;
 import java.util.concurrent.atomic.AtomicInteger;

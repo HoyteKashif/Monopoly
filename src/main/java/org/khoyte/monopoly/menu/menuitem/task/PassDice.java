@@ -1,6 +1,6 @@
 package org.khoyte.monopoly.menu.menuitem.task;
 
-import org.khoyte.monopoly.Game;
+import kh.monopoly.Game;
 
 public class PassDice implements Runnable {
 

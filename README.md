@@ -12,9 +12,7 @@
 - [ ] Player wealth is Calculated without the collective price of the buildings owned by this player
 
 ## TODO
-1. Implement Chance card selection: ("Go To Jail", "Make general repairs on all your property: For each house pay $25, For each hotel pay $100.")
-
-2. Implement Community Chest card selection
+1. Implement Community Chest card selection
 
 3. Check for any additional rules when the user roles doubles
 

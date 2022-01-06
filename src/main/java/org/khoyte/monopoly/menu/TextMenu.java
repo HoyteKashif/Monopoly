@@ -7,8 +7,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.khoyte.monopoly.Game;
 import org.khoyte.monopoly.menu.menuitem.TextMenuItem;
+
+import kh.monopoly.Game;
 
 public class TextMenu extends TextMenuItem {
 
