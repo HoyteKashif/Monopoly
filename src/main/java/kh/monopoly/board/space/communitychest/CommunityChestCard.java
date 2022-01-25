@@ -17,6 +17,6 @@ public abstract class CommunityChestCard {
 
 	@Override
 	public String toString() {
-		return "ChanceCard [description=" + description + "]";
+		return "CommunityChestCard [description=" + description + "]";
 	}
 }

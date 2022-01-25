@@ -15,7 +15,9 @@ public class Main {
 		game.add(new Player("kashif"));
 		game.add(new Player("damali"));
 
-		game.start();
+		new Thread(game).start();
+
+//		game.start();
 	}
 
 }

@@ -1,4 +1,4 @@
-package kh.monopoly;
+package kh.monopoly.board;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 
 import kh.monopoly.board.space.GoToJail;
 import kh.monopoly.board.space.ISpace;
+import kh.monopoly.board.space.Space;
 import kh.monopoly.board.space.Tax;
 import kh.monopoly.board.space.property.IProperty;
 import kh.monopoly.board.space.property.Property;
@@ -17,6 +18,7 @@ import kh.monopoly.board.space.property.RailRoad;
 import kh.monopoly.board.space.property.Street;
 import kh.monopoly.board.space.property.Utility;
 import kh.monopoly.board.space.property.deed.StreetDeed;
+import kh.monopoly.player.Player;
 
 public class Board {
 	public static final Object[] board = new Object[40];
@@ -28,6 +30,54 @@ public class Board {
 	public static final int[] CHANCE = { 7, 22, 36 };
 
 	public static final Logger logger = Logger.getLogger(Board.class);
+
+	/**
+	 * Advance to go and Collect $200
+	 * 
+	 * @param player
+	 */
+	public static void advanceToGo(Player player) {
+		player.setPosition(0);
+		player.addCash(200);
+	}
+
+//	public static void advanceToSpace(Player player) {
+//
+//		int curPosition = player.getPosition();
+//		int newPosition = Board.findStreetByName("St. Charles Place");
+//
+//		player.setPosition(newPosition);
+//
+//		// If they pass Go then they also collect $200
+//		boolean passedGo = curPosition > newPosition;
+//
+//		if (passedGo) {
+//			player.addCash(200);
+//		}
+//
+//		advanceToSpace(player, Board.findStreet("St. Charles Place"), curPosition > newPosition);
+//	}
+
+	/**
+	 * If they pass Go then they also collect $200
+	 * 
+	 * @param player
+	 * @param newPosition
+	 * @param passedGo
+	 */
+	public static void advanceToSpace(Player player, ISpace space, boolean allowedToPassGoAndCollect200) {
+
+		int curPosition = player.getPosition();
+		int newPosition = Board.findPosition(space);
+
+		boolean passedGo = curPosition > newPosition;
+		if (passedGo && allowedToPassGoAndCollect200) {
+			player.addCash(200);
+		}
+
+		player.setPosition(newPosition);
+
+	}
 
 	/**
 	 * used an array of type integer because using a final integer is not valid
@@ -58,17 +108,17 @@ public class Board {
 		streetColorGroups = new HashMap<>();
 
 		for (int i = 0; i < board.length; i++) {
+
 			if (isStreet(i)) {
 				Street street = getStreet(i);
 				String colorGroup = ((StreetDeed) street.deed()).colorGroup();
-				if (streetColorGroups.containsKey(colorGroup)) {
-					streetColorGroups.get(colorGroup).add(street);
-				} else {
-					List<Street> streets = new ArrayList<>();
-					streets.add(street);
-					streetColorGroups.put(colorGroup, streets);
-				}
+
+				if (!streetColorGroups.containsKey(colorGroup))
+					streetColorGroups.put(colorGroup, new ArrayList<>());
+
+				streetColorGroups.get(colorGroup).add(street);
 			}
+
 		}
 
 		streetColorGroups = Collections.unmodifiableMap(streetColorGroups);
@@ -78,17 +128,17 @@ public class Board {
 
 		Map<String, List<Street>> map = new HashMap<>();
 		for (int i = 0; i < board.length; i++) {
+
 			if (isStreet(i)) {
 				Street street = getStreet(i);
 				String colorGroup = ((StreetDeed) street.deed()).colorGroup();
-				if (map.containsKey(colorGroup)) {
-					map.get(colorGroup).add(street);
-				} else {
-					List<Street> streets = new ArrayList<>();
-					streets.add(street);
-					map.put(colorGroup, streets);
-				}
+
+				if (!map.containsKey(colorGroup))
+					map.put(colorGroup, new ArrayList<>());
+
+				map.get(colorGroup).add(street);
 			}
+
 		}
 		return map;
 	}
@@ -105,10 +155,6 @@ public class Board {
 
 	public static int getJailPosition() {
 		return JAIL[0];
-	}
-
-	public static void main(String[] args) {
-		System.out.println(boardIndexOf(-1));
 	}
 
 	public static int boardIndexOf(int rawLocation) {
@@ -244,7 +290,7 @@ public class Board {
 	 * @return location of the Street, if value is -1 then the street could not be
 	 *         found
 	 */
-	public static int findStreetByName(String name) {
+	private static int findStreetByName(String name) {
 
 		for (int i = 0; i < board.length; i++) {
 			if (isStreet(i) && ((Street) board[i]).name().equalsIgnoreCase(name)) {
@@ -254,6 +300,48 @@ public class Board {
 
 		// could not find the street by name
 		return -1;
+	}
+
+	public static int findPosition(ISpace space) {
+		for (int i = 0; i < board.length; i++) {
+			if (space.equals(board[i])) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	public static int findStreetPosition(Street street) {
+		for (int i = 0; i < board.length; i++) {
+			if (street == board[i]) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	/**
+	 * Could not find the street by name
+	 * 
+	 * @param name
+	 * @return Street
+	 */
+	public static Street findStreet(String name) {
+
+		Street street;
+		for (int i = 0; i < board.length; i++) {
+
+			if (!isStreet(i))
+				continue;
+
+			street = (Street) board[i];
+
+			if (street.name().equalsIgnoreCase(name))
+				return street;
+
+		}
+
+		return null;
 	}
 
 }

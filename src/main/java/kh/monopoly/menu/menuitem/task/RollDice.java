@@ -1,8 +1,8 @@
 package kh.monopoly.menu.menuitem.task;
 
-import kh.monopoly.Board;
 import kh.monopoly.Dice;
 import kh.monopoly.Game;
+import kh.monopoly.board.Board;
 import kh.monopoly.board.space.GoToJail;
 import kh.monopoly.board.space.Tax;
 import kh.monopoly.board.space.chance.Chance;

@@ -10,7 +10,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import kh.monopoly.Bank;
-import kh.monopoly.Board;
+import kh.monopoly.board.Board;
 import kh.monopoly.board.space.Space;
 import kh.monopoly.board.space.chance.GetOutOfJailFree;
 import kh.monopoly.board.space.property.Street;

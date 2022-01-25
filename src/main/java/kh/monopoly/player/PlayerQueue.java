@@ -26,7 +26,9 @@ public class PlayerQueue {
 		return currentPlayer != null ? currentPlayer.value : null;
 	}
 
-	// change the current player to the next available player
+	/**
+	 * Advance the assignment of the reference to the current player
+	 */
 	public void advance() {
 
 		if (currentPlayer == null) {

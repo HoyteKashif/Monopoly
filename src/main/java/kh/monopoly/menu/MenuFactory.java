@@ -24,4 +24,14 @@ public class MenuFactory {
 		return new TextMenu("M E N U", items);
 	}
 
+	public static TextMenu getMenu() {
+
+		TextMenuItem menuItems[];
+		menuItems = new TextMenuItem[1];
+		menuItems[0] = new TextMenuItem("Start Game", new RollDice());
+
+		return new TextMenu("Start-Menu", menuItems);
+
+	}
+
 }

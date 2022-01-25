@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import kh.monopoly.board.Board;
 import kh.monopoly.board.space.FreeParking;
 import kh.monopoly.board.space.Go;
 import kh.monopoly.board.space.GoToJail;
@@ -28,7 +29,7 @@ import kh.monopoly.menu.TextMenu;
 import kh.monopoly.player.Player;
 import kh.monopoly.player.PlayerQueue;
 
-public class Game {
+public class Game implements Runnable {
 
 	static final Logger logger = Logger.getLogger(Game.class);
 
@@ -122,16 +123,30 @@ public class Game {
 		playerQueue.addNode(player);
 	}
 
-	public void start() {
+	@Override
+	public void run() {
 		logger.info("start new game");
 
 		// queue up the first player
 		playerQueue.advance();
 
-		TextMenu mainMenu = MenuFactory.getMainMenu();
-		mainMenu.run();
+		menu.run();
 
-		quit();
+//		quit();
+	}
+
+	TextMenu menu;
+
+	public void setMenu(TextMenu menu) {
+		this.menu = menu;
+	}
+
+//	public TextMenu getMenu() {
+//		return MenuFactory.getMainMenu();
+//	}
+
+	public void submitRequest() {
+
 	}
 
 	public Player getCurrentPlayer() {
@@ -169,15 +184,6 @@ public class Game {
 			return null;
 		}
 
-	}
-
-	public static boolean isNumeric(String str) {
-		try {
-			Integer.parseInt(str);
-			return true;
-		} catch (NumberFormatException e) {
-		}
-		return false;
 	}
 
 	public static final int loop_prompt_option = 0;

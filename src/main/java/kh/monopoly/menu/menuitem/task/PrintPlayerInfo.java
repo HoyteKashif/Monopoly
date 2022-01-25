@@ -2,8 +2,8 @@ package kh.monopoly.menu.menuitem.task;
 
 import java.util.List;
 
-import kh.monopoly.Board;
 import kh.monopoly.Game;
+import kh.monopoly.board.Board;
 import kh.monopoly.board.space.property.Street;
 import kh.monopoly.player.Player;
 

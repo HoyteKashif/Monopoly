@@ -8,8 +8,8 @@ import java.util.Map.Entry;
 import org.apache.log4j.Logger;
 
 import kh.monopoly.Bank;
-import kh.monopoly.Board;
 import kh.monopoly.Game;
+import kh.monopoly.board.Board;
 import kh.monopoly.board.space.property.Street;
 import kh.monopoly.input.Keyboard;
 import kh.monopoly.player.Player;

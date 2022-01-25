@@ -1,8 +1,8 @@
 package kh.monopoly.menu.menuitem.task;
 
 import kh.monopoly.Bank;
-import kh.monopoly.Board;
 import kh.monopoly.Game;
+import kh.monopoly.board.Board;
 import kh.monopoly.board.space.property.IProperty;
 import kh.monopoly.input.Keyboard;
 import kh.monopoly.player.Player;

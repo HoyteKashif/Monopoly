@@ -5,8 +5,8 @@ import java.util.Stack;
 
 import org.apache.log4j.Logger;
 
-import kh.monopoly.Board;
 import kh.monopoly.Game;
+import kh.monopoly.board.Board;
 import kh.monopoly.board.space.Space;
 import kh.monopoly.player.Player;
 
